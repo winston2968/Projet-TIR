@@ -2,7 +2,6 @@
 
 Ce repo présente le travail effectué dans cette UE au cours du S8 du Master IMA. L'objectif est de rédiger une état de l'art dans un domaine précis de la recherche en Intelligence Artificielle. 
 
----
 ## 📁 Structure 
 
 Le projet se structure comme suit : 
@@ -23,7 +22,10 @@ Le projet se structure comme suit :
 └── ressources
 ```
 
----
+## Gestion 
+
+Pour ce qui est de la gestion des tâches et des dates à respecter, la partie Projects du repo y est dédiée. Trois catégories ont été créées pour être au clair de l'état de chaque article. Une seconde feuille permet de visualiser l'avancement du projet. L'ajout de dates butoir sur les tâches permet de les visualiser sur cette feuille. 
+
 ## 📑 Rapport 
 
 ### Rédaction 
@@ -39,7 +41,6 @@ Pour cela, il suffit d'avoir installé la commande ```pdflatex``` disponible nat
 
 La compilation de l'ensemble du rapport se fait en laçant la commande ```make```depuis le dossier ```report/```. Les fichiers de builds peuvent être supprimés via la commande ```make clean```pour éviter de polluer le GitHub. 
 
----
 ## 📚 Notes 
 
 Le dossier ```notes/``` est consacré à la relecture des articles choisis qui peuvent éventuellement être stockés dans le dossier ```ressources/```. L'édition des notes pourra se faire au format Markdown (```.md```) qui supporte les formules LaTeX et est facile à modifier. 
