@@ -1,0 +1,18 @@
+RENDU TIR - Axel PIGEON
+
+GROUPE : 
+	- Noé Mastrorillo 
+	- Tortosa Matthias 
+	- Antoine Sinatti
+	- Axel PIGEON
+
+ENCADRANT : Martin Cooper 
+
+SUJET : Comment expliquer les décisions prises par un classifieur ? 
+
+RÉFÉRENCES : 
+	1. M. T. Ribeiro, S. Singh, and C. Guestrin. Anchors: High-precision model-agnostic explanations. In AAAI, pages 1527–1535, 2018.
+
+	2. João Marques-Silva, Jairo A. Lefebre-Lobaina, Maria Vanina Martinez: Efficient and Rigorous Model-Agnostic Explanations. IJCAI 2025: 2637-2646
+
+	3. Olivier Létoffé, Xuanxiang Huang, João Marques-Silva: Towards Trustable SHAP Scores. AAAI 2025: 18198-18208.
