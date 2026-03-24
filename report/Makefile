@@ -1,24 +1,46 @@
 # Configuration
-PDF_NAME = main
-LATEX_ENGINE = pdflatex
-MAIN_FILE = $(PDF_NAME).tex
+MAIN = main
+LATEX = pdflatex
+BIB = biber
 
-.PHONY: all clean setup
+# Règle par défaut : compile le PDF
+compile: $(MAIN).pdf
 
-# Commande par défaut : compile le projet
-all: $(PDF_NAME).pdf
+# Compilation PDF avec biber
+$(MAIN).pdf: $(MAIN).tex
+	@echo "=== Première compilation LaTeX ==="
+	$(LATEX) $(MAIN).tex
+	@echo "=== Traitement bibliographie avec Biber ==="
+	$(BIB) $(MAIN)
+	@echo "=== Deuxième compilation LaTeX ==="
+	$(LATEX) $(MAIN).tex
+	@echo "=== Troisième compilation LaTeX pour TOC et références croisées ==="
+	$(LATEX) $(MAIN).tex
 
-# Règle de compilation principale
-$(PDF_NAME).pdf: $(MAIN_FILE) $(REPORT_DIR)/references.bib
-	@echo "==> Compilation du rapport..."
-	latexmk -$(LATEX_ENGINE) -f -interaction=nonstopmode \
-		-output-directory=$(REPORT_DIR) $(MAIN_FILE)
-
-# Nettoyage des fichiers auxiliaires
+# Nettoyage des fichiers temporaires générés par la compilation
 clean:
-	@echo "==> Nettoyage des fichiers temporaires..."
-	@rm -f *.run.xml *.bbl *.blg *.aux *.log *.out *.toc *.fdb_latexmk *.fls *.synctex.gz *.thm
+	find . -type f \( \
+		-name "*.aux" -o -name "*.log" -o -name "*.out" -o -name "*.toc" \
+		-o -name "*.lof" -o -name "*.lot" -o -name "*.bbl" -o -name "*.blg" \
+		-o -name "*.maf" -o -name "*.mtc*" -o -name "*.thm" -o -name "*.synctex.gz" \
+		-o -name "*.ptc*" -o -name "*.fls" -o -name "*.fdb_latexmk" \
+		-o -name "*.bcf" -o -name "*.run.xml" \
+	\) -delete
 
-# Nettoyage complet (y compris le PDF final)
-distclean: clean
-	@rm -f $(REPORT_DIR)/$(PDF_NAME).pdf
+# Nettoyage complet : enlève le PDF et les fichiers temporaires
+cleanall: clean
+	rm -f $(MAIN).pdf
+
+# Visualiser le PDF
+view: $(MAIN).pdf
+	open $(MAIN).pdf
+
+build: 
+	make cleanall && make compile && make clean
+
+# Juste la bibliographie
+bib:
+	$(BIB) $(MAIN)
+
+compile-short: 
+	make cleanall && $(LATEX) $(MAIN).tex && make clean

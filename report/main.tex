@@ -1,13 +1,7 @@
 \documentclass[a4paper]{article}
 
 % HEADER
-
-
 \usepackage[top=3cm, bottom=3cm, left=3.5cm, right=3.5cm]{geometry}
-
-
-\setlength{\parindent}{0cm}
-
 
 \usepackage[english]{babel}
 \usepackage[T1]{fontenc}
@@ -29,6 +23,7 @@
 \usepackage{stmaryrd}
 % \usepackage{ntheorem}
 \usepackage{lmodern}
+\usepackage{bbm}
 \usepackage{mathtools}
 \usepackage{ragged2e}
 \usepackage{tabularx}
@@ -114,7 +109,7 @@
 {
     \refstepcounter{mydefcounting}
     \begin{mdframed}[style=mystyle, linecolor=lightgray]
-    \small \textbf{\textsc{Definition \themydefcounting}} \textit{~#1} \medskip \par
+    \normalsize \textbf{\textsc{Definition \themydefcounting}} \textit{~#1} \par
 }
 {
     \end{mdframed}
@@ -122,9 +117,9 @@
 
 \NewDocumentEnvironment{theorem}{O{}}
 {
-    \refstepcounter{mydefcounting} % On utilise le même compteur maître
+    \refstepcounter{mydefcounting}
     \begin{mdframed}[style=mystyle, linecolor=black]
-    \small \textbf{\textsc{Theorem \themydefcounting}} \textit{~#1} \medskip \par
+    \normalsize \textbf{\textsc{Theorem \themydefcounting}} \textit{~#1} \medskip \par
 }
 {
     \end{mdframed}
@@ -146,10 +141,10 @@
 
 % OTHERS 
 
-\newlength\tindent
-\setlength{\tindent}{\parindent}
-\setlength{\parindent}{0pt}
-\renewcommand{\indent}{\hspace*{\tindent}}
+% \newlength\tindent
+% \setlength{\tindent}{\parindent}
+% \setlength{\parindent}{0pt}
+% \renewcommand{\indent}{\hspace*{\tindent}}
 
 \usepackage{fancyvrb}
 \usepackage{tikz-cd} 
@@ -215,9 +210,20 @@
 }
 
 % ---- Bib ----- 
-\usepackage[backend=biber, style=numeric-comp, sorting=none]{biblatex} 
-\addbibresource{references.bib}
 
+\usepackage[backend=biber, style=numeric-comp, sorting=none]{biblatex} 
+
+% Biblio parameters
+\DeclareSourcemap{
+  \maps[datatype=bibtex]{
+    \map{
+      \step[fieldset=abstract, null]
+      \step[fieldset=note, null]
+      \step[fieldset=file, null]
+    }
+  }
+}
+\addbibresource{references.bib}
 
 
 \begin{document}
