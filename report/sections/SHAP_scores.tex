@@ -1,0 +1,40 @@
+\section{Explanation methods based on Shapley values}
+
+Some of the most widely used methods for single decision features importance explanation are based on the Shapley values from game theory. These methods are so popular because they give a contribution score for each feature in the decision that is easily understood by the user. This contribution score has a sign, so that a positive score means that the features contributes positively to the decision (towards the +1 class) and the opposite for a negative score (towards the -1 class), and it has a magnitude, so that a higher absolute score means a higher contribution towards the respective class.
+
+While these methods are amongst the most popular, that doesn't mean that they are superior, as we will see the several shortcomings later.
+
+
+\subsection{Game theory preliminaries}
+
+In game theory, the Shapley value represents...
+
+It gives the following powerful axioms:
+\begin{itemize}
+    \item ...
+\end{itemize}
+
+
+\subsection{Shapley values for XAI}
+
+Here we will consider $\mathcal{F} = \{1, 2, \dots, n\}$ the set of the $n$ numbered features used in the classification model, and $f: \mathbb{F} \rightarrow \{-1, +1\}$ the classification function, where $\mathbb{F} = \mathbb{F}_1 \times \mathbb{F}_2 \times \cdots \times \mathbb{F}_n$ is the input space, and $\mathbb{F}_i$ the space of the $i^{th}$ feature.
+
+Here, we consider $(\mathcal{F}, f)$ as a coalitional game, and the Shapley value is given by the following formula:
+
+From the above definitions, we can deduce that each score $\phi_i$ is...
+
+
+\subsection{Different methods}
+
+SHAP
+TreeSHAP
+Eject
+KernelSHAP
+QII
+CNN SHAP
+Diffts evaluation functions
+FAE
+
+
+
+
