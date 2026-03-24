@@ -1,0 +1,31 @@
+\section{Different local model-agnostic explanation methods}
+
+In this section, we present a set of perturbation method used in black-box 
+models explanation. A perturbation method can be defined by the 
+generation of perturbed samples (ex: noised features in model representation
+or perturbed input tensor) at the input of the black-box model. The objective 
+is to compare the model behavior (the prediction) between a set of different 
+perturbed inputs and the original one. Then, we can determine 
+which one is more important for the prediction. It allows the explanation model to 
+detail why the model took a specific decision and why. The following methods register in this 
+type. The first one, LIME (Local Interpretable Model-Agnostic Explanation) focus on a linear approximation 
+of local model behavior. Secondly, the Anchors method provides an amelioration of LIME by introducing the concept 
+of IF-THEN rules to provide a better user-experience. Finally, we will briefly talk about add-ons of those methods
+in specific cases. 
+
+\begin{remark}[Notation]
+    Let's introduce some notations to identify which objects we will talk about. 
+    We denote with $f$ a black-box model we want to explain, then $f : X \longrightarrow Y$ 
+    where $X$ is the set of instances $x \in X$ and $Y$ the different possible predictions $f(x)$. 
+    In this section, we will talk about linear explanation model, denoted $g$. 
+    To identify which input representation we use, we denote by $x'$ the 
+    interpretable representation of an input $x$ in the black-box model $f$. 
+    Then, if we construct a set of perturbed interpreted samples $ \mathcal{Z}$ 
+    from $x'$, this set contains perturbed version of $x'$ called $z'$. Finally, 
+    $ \Omega(g)$ express the complexity of the model $g$, generally defined by the 
+    number of non-zeros weights in $g$. 
+\end{remark}
+
+\subsection{LIME (Local Interpretable Model-Agnostic Explainer)}
+
+
