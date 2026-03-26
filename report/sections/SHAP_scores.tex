@@ -1,27 +1,83 @@
+\newcommand{\mS}{\mathcal{S}}
+\newcommand{\mF}{\mathcal{F}}
+\newcommand{\mP}{\mathcal{P}}
+\newcommand{\mbF}{\mathbb{F}}
+\newcommand{\mbE}{\mathbb{E}}
+
+
+
 \section{Explanation methods based on Shapley values}
 
-Some of the most widely used methods for single decision features importance explanation are based on the Shapley values from game theory. These methods are so popular because they give a contribution score for each feature in the decision that is easily understood by the user. This contribution score has a sign, so that a positive score means that the features contributes positively to the decision (towards the +1 class) and the opposite for a negative score (towards the -1 class), and it has a magnitude, so that a higher absolute score means a higher contribution towards the respective class.
+Some of the most widely used methods for single decision features importance explanation are based on the Shapley values from game theory. These methods are so popular because they give a contribution score for each feature in the decision that is easily understood by the user. This contribution score has a sign, so that a positive score means that the features contributes positively to the decision (towards the +1 class) and the opposite for a negative score (towards the -1 class), and it has a magnitude, so that a higher absolute score means a higher contribution towards the respective class 
 
 While these methods are amongst the most popular, that doesn't mean that they are superior, as we will see the several shortcomings later.
 
 
 \subsection{Game theory preliminaries}
 
-In game theory, the Shapley value represents...
+In game theory, Shapley values provide a mathematically fair and unique method to attribute the payoff of a cooperative game to the players. Formally, a coalitional game $(\mF, v)$ is represented by a set of $n$ players $\mF = \{1, \dots, n\}$, and a characteristic function $v : \mP(\mF) \rightarrow \R$ that represents the payoff for a subset of players $\mS \subset \mF$ (a coalition). Then, the Shapley value for a single player $i \in \mF$, noted $\phi_i(v)$ is defined as follows in \cite{merrick_explanation_2020}:
 
-It gives the following powerful axioms:
+\begin{definition}[Shapley value]
+    \[
+        \phi_i(v) = \frac{1}{n} \sum_{\mS \in \mF\backslash\{i\}} \binom{n-1}{|\mS|}^{-1} \bigl( v(\mS \cup \{i\}) - v(\mS) \bigr)
+    \]
+\end{definition}
+
+Therefore, the Shapley value for a player $i$ is computed by going through all the coalitions of players not containing $i$ and looking at the payoff difference with and without the player $i$ (with a normalization factor).
+
+It gives the following powerful axioms as described in \cite{fryer_shapley_2021}:
 \begin{itemize}
-    \item ...
+    \item[Efficiency] The worth of the coalition containing all players is distributed losslessly among the players :
+    \[
+        \sum_{i \in \mF} \phi_i(v) = v(\mF) - v(\emptyset)
+    \] 
+    
+    \item[Null Player] If a player contributes nothing to each coalition, then its Shapley value is zero :
+    \[
+        \forall i \in \mF \quad \bigl[ \forall \mS \subset \mF \quad v(\mS \cup \{i\}) = v(\mS) \bigr] \Longrightarrow \phi_i(v) = 0
+    \]
+
+    \item[Symmetry] Any two players that play equal roles amongst all coalition receive the same Shapley value :
+    \[
+        \forall i,j \in \mF \quad \bigl[\forall \mS \subset \mF\backslash\{i,j\}\quad v(\mS \cup \{i\}) = v(\mS \cup \{j\}) \bigr] \Longrightarrow \phi_i(v) = \phi_j(v)
+    \]
 \end{itemize}
 
 
-\subsection{Shapley values for XAI}
+\subsection{Shapley values for feature explanation}
 
-Here we will consider $\mathcal{F} = \{1, 2, \dots, n\}$ the set of the $n$ numbered features used in the classification model, and $f: \mathbb{F} \rightarrow \{-1, +1\}$ the classification function, where $\mathbb{F} = \mathbb{F}_1 \times \mathbb{F}_2 \times \cdots \times \mathbb{F}_n$ is the input space, and $\mathbb{F}_i$ the space of the $i^{th}$ feature.
+In ML, Shapley values allocates the predicted value of a specific instance fairly amongst all the features. Thus, the Shapley value of a feature represents the contribution (positive or negative) of this feature in the explained decision.
 
-Here, we consider $(\mathcal{F}, f)$ as a coalitional game, and the Shapley value is given by the following formula:
+Formally, let $x \in \mbF$ be the input where $\mbF = \mbF_1 \times \cdots \times \mbF_2$ is the input space of our model (each $\mbF_i$ if the space of the feature $i$), and $f(x)$ is the predicted value of our model ($f: \mbF \longrightarrow \left[-1, +1 \right]$ is the classification function). We consider the coalitional game represented by $\mF = \{1, \dots, n \}$ the set of numbered features that will be our players, and the characteristic function $v : \mP(\mF) \longrightarrow \R$ defined as follows:
+\[
+    \forall \mS \subset \mF \quad v(\mS) = \mbE[f(X) | X_{\mS} = x_{\mS}]
+\]
+where $X_{\mS} = x_{\mS}$ means that instances $X$ and $x$ share the same values for the features in $\mS$.
 
-From the above definitions, we can deduce that each score $\phi_i$ is...
+The characteristic function is the mean value of the predictions on inputs that share the same values for the features in $\mS$.
+
+Finally, we can define the Shapley value of a feature $i$ in the wish of explaining the prediction of an input $x$ as follows:
+\[
+    \phi_i = \frac{1}{n} \sum_{\mS \in \mF\backslash\{i\}} \binom{n-1}{|\mS|}^{-1} \bigl( \mbE[f(X) | X_{\mS\backslash\{i\}} = x_{\mS\backslash\{i\}}] - \mbE[f(X) | X_{\mS} = x_{\mS}] \bigr)
+\]
+
+\begin{remark}
+    Every Shapley value computed will be based on the choice of the distribution of the reference instances $X$, and we will see later how it matters. Moreover, we can deduce from the above definitions and the efficiency axiom the following property:
+    \[ \sum_{i \in \mF} \phi_i(v) = \mbE[f(X) | X_{\mF} = x_{\mF}] - \mbE[f(X) | X_{\emptyset} = x_{\emptyset}] = f(x) - \mbE[f(X)] \]
+    Therefore, the sum of the Shapley values of all features equals to the predicted value minus a reference contribution that is the mean of all predictions (for inputs based on a specific distribution).
+\end{remark}
+
+
+\subsection{Approximation}
+
+As you may have noticed, computing exact Shapley values has an exponential complexity in terms of the number of features. Indeed, it requires to explore all the subcoalitions $\mS$ of $\mF\backslash\{i\}$. In practice, this problem becomes intractable when playing with hundreds of features \cite{strumbelj_efficient_2010}. Moreover, the calculation of the characteristic function $v(\mS)$ is also intractable as it requires to explore all the input space $\mbF$.
+
+Both issues are treated in \cite{merrick_explanation_2020}. For the former, they use a sampling method base on features ordering: they generate several orderings $O$ of $\mF$, and for each ordering, select $\mS = pre_i(O)$, the set of features that are before $i$ in the ordering $O$. For the latter, the suggest a sampling of the $X$ distribution.
+
+\begin{remark}
+    These two approximation solutions allow us to build confidence intervals over the computed Shapley values. Each feature contribution can now be represented as an interval. This is particularly interesting because this gives us more information whether an approximation of the contribution is relevant or not. If a Shapley value is approximated to be close to zero, its confidence interval may take values from negatives to positives values, meaning that we cannot deduce any valuable information about whether this feature contributes positively or negatively in the decision. Remember that if we could compute the exact Shapley value, this problem would not exist.
+\end{remark}
+
 
 
 \subsection{Different methods}
