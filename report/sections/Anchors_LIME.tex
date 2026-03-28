@@ -40,7 +40,7 @@ architecture. $f$ is considered as an oracle used to train $g$.
 Formally, for an original interpretable representation $x' \in \{0, 1\}^{d'}$ of a
 sample $x \in \R^d$, it generates a set of perturbed samples $z'$ which are drawn
 by selecting uniformly some $x'$ non-zero components. This random sampling is weighted by 
-$\pi_x$ which defines a locality around $x'$ denoted $ \mathcal{Z}$. In practical, 
+$\pi_x$ which defines a locality around $x'$ denoted $ \mathcal{Z}$. In practice, 
 $ \pi_x$ is an exponential kernel applied to a distance $D$. 
 To find the optimal model $g$, we can define a loss function $ \mathcal{L}(f,g, \pi_x)$ telling how 
 unfaithful $g$ is in approximating $f$ on $ \mathcal{Z}$. The objective is then to 
@@ -93,14 +93,16 @@ undermining the reliability of this method \cite{wilking_fooling_2022}.
 
 \subsection{Anchors}
 
-Anchors is also a model-agnostic explanation method based on LIME system but enhanced in order
-to provide local sufficient conditions for prediction. Anchors are defined by short and 
-disjoint rules which are preferred by users for explanation \cite{ribeiro_anchors_2018}. It can be applied 
+To address the lack of clear coverage boundaries on LIME, \textcite{ribeiro_nothing_2016}
+introduced anchor-LIME (aLIME). This LIME evolution uses IF-THEN rules to 'anchor'
+a prediction. This transition to linear importance to rule-based invariance laid the foundation 
+of the Anchors method. Thus, they are defined by short and 
+disjoint rules which are preferred by users for explanation \cite{ribeiro_anchors_2018}. This method can be applied 
 on different set of domains (tabular, text, images, etc...) for different 
 tasks (classification, prediction, text generation, etc...).
 
 \begin{definition}[Anchors]
-    Formally, Anchors are built on a set of predicates $a$ called a "rules". We can 
+    Formally, Anchors are built on a set of predicates $\{a_i\}$ called a "rules". We can 
     also see it as a function of instances $x \in X$ :
     $$ A : 
         \begin{cases}
@@ -149,7 +151,6 @@ exhaustive search. That's why the article introduced the Bottom-Up approach:
     set of samples \cite{ribeiro_anchors_2018}.
     \item \emph{Termination}: The process terminates when a rule meets the statistical precision constraint: $\mathbb{P} (prec(A) \geqslant \tau) \geqslant 1 - \delta$.
 \end{enumerate}
-
 To address the limitations of a purely greedy search, the algorithm extends the 
 construction to a \emph{Beam Search} of size $B$.
 It maintains a set of $B$ current candidates instead of a single one.
@@ -159,3 +160,80 @@ the algorithm outputs the one with the highest coverage $cov(A)$, effectively op
 To provide a global understanding of the model, the article adapts a \emph{Submodular Pick} (SP) procedure. 
 The goal is to select a set of $K$ anchors that are non-redundant and cover as 
 many instances in the validation set similar to the approach used in LIME \cite{ribeiro_anchors_2018,ribeiro_why_2016}.
+
+\subsection{Related}
+
+Let's talk about related topics about Anchors and LIME and specifically about 
+improvements provided in specific cases. 
+
+The first one is an amelioration of LIME weights for an instance. The related 
+work is motivated by the fact that LIME system define the importance of a 
+feature only by the distance between its original representation 
+and the noised one in the model representation. With ILIME, the paper proposes a 
+new method which consider the black-box loss function value between the two 
+instances, this defines the \emph{influence} of a feature. 
+Formally, it is defined as scalar product between original weight of the prediction 
+on the perturbed feature and the loss function gradient evaluated at this point. 
+The final "importance" value of a feature on the model's prediction is defined 
+as the product of its influence and its original LIME weight. Thus, a synthetic 
+instance will have an important weight if its representation is near to the 
+original feature one, and if it is able to modify the model prediction.
+To provide a global explanation of the model behavior, ILIME uses a set of 
+local explanations and defines a Dendogram with hierarchical clustering on 
+explanations (weights). It differs from LIME where the user needed to define 
+the number of global explanation we wanted.
+
+
+Secondly, \textcite{ribeiro_nothing_2016} presents the evolution of LIME system by adding Anchors to clearly define LIME coverage boundaries. Indeed, by construction LIME perturbs the output representation $x'$ of a black-box model $f$ by selecting random $x'$ components according to a distribution $\pi_x$. However, this $ \pi_x$ doesn't define a clear zone around $x'$ where the system select the perturbed inputs to give to the models, ones can be very close and the other very far. So that human cannot really understand which feature is more important than another. 
+That's why, aLIME is an IF-THEN rules-based system that "anchors" a prediction features such that changing the others don't change de black-box model output. By this approach, precision (defined as how accurate humans are in those predictions) is needed but a too large set of rules only specific to a single instance is not useful for model understandability. Then the combinatorial aLIME problem if to find the shortest Anchor with high precision. 
+
+As presented in the previous section, SHAP-Scores in an intractable problem. 
+Fortunately, \textcite{arenas_tractability_2021} presents an efficient algorithm to compute 
+SHAP-scores within specific classification models. The SHAP-score is a prominent 
+explanation method for classifiers that assigns a numerical value to each input 
+feature based on its contribution to the decision process. In general, computing 
+SHAP-scores is computationally intractable due to the model's complexity, 
+often being \#P-hard.
+However, this paper focuses on \emph{Boolean Classifiers}, which return either 1 
+(accept) or 0 (reject) for a given input. These models are represented as 
+\emph{deterministic} and \emph{decomposable} Boolean circuits, a class that 
+encompasses models like Bayesian Classifiers, Random Forests, and Decision Trees.
+In this framework, the authors provide a polynomial-time algorithm to compute 
+SHAP-scores over tractable Boolean circuits, initially assuming a uniform 
+distribution over inputs. Both the determinism and decomposability properties 
+are strictly necessary for this tractability:
+\begin{itemize}
+    \item Determinism ensures that for every OR gate, no two inputs can be true at the same time for any given assignment.
+    \item Decomposability requires that for every AND gate, the sets of features in its sub-circuits are pairwise disjoint (they share no variables).
+\end{itemize}
+The core contribution of the paper is the reduction of the SHAP-score computation 
+to a \#SAT problem (model counting). The authors then define a polynomial-time 
+algorithm to solve this specific \#SAT problem using a \emph{bottom-up induction} 
+process.
+
+Finally, we can discuss an implementation of SHAP-Scores and Anchors in financial 
+fraud detection. 
+Indeed, \textcite{thanathamathee_shap-instance_2024} presents a real-case application 
+of SHAP-values and Anchors in fraud detection systems. While traditional 
+statistical methods are common, they struggle with the complex nature of modern 
+fraud. The authors enhance the XGBoost model by using a novel SHAP-instance 
+weighting method to prioritize learning from the most informative samples. 
+To solve the massive class imbalance in the Thailand Stock Exchange dataset, 
+they combine RENN and SMOTE techniques before optimizing the model with Optuna 
+and Hyperband.
+The resulting model effectively differentiates between non-fraudulent, fraudulent, 
+and "grey area" behaviors. By reaching a perfect recall (1.000) for fraudulent 
+cases, this approach sets a new standard for accuracy and trust. Furthermore, 
+Anchors are used to translate "black-box" predictions into easy-to-understand 
+IF-THEN rules, providing clear insights for risk management. 
+However, integrating these SHAP and Anchor systems increases the computational 
+load and total processing time.
+
+% Conclusion 
+In summary, LIME defined the principle of perturbation explainer by learning 
+weights which denotes an instance importance in the black-box decision process. 
+Then, Anchors enhanced this model by adding IF-THEN rules which allows to 
+give clear instances coverage to the user. 
+Nevertheless, this precision is difficult to reach because of the exponential 
+complexity fo this type of computation. In practice, Anchors and LIME are used in 
+specific domains where explainability is necessary to trust the model. 
