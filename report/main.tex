@@ -17,7 +17,6 @@
 \usepackage{graphicx}
 \usepackage{stmaryrd}
 \usepackage{systeme}
-\usepackage{wrapfig}
 \usepackage{colortbl}
 \usepackage{cellspace}
 \usepackage{stmaryrd}
@@ -25,10 +24,10 @@
 \usepackage{lmodern}
 \usepackage{bbm}
 \usepackage{mathtools}
-\usepackage{ragged2e}
 \usepackage{tabularx}
 \usepackage{titlepic}
 \usepackage{fancyhdr}
+\usepackage{caption}
 \usepackage{caption}
 \usepackage{xcolor} % pour les couleurs
 \usepackage[linkbordercolor=white]{hyperref} % après avoir chargé xcolor
@@ -42,6 +41,7 @@
 \usepackage{float} % For image positionning
 \usepackage{multirow}
 \usepackage{subcaption}
+\usepackage{makecell}
 
 
 % \setcounter{secnumdepth}{-1} % Désactive le compteur des parties
@@ -246,21 +246,27 @@
 \vspace{0.5cm}
 
 \begin{abstract}
-    \lipsum[1]
+    % TODO: Fill-in this part
+    Abstract here
 \end{abstract}
+
+\tableofcontents
 
 % ==================================================================================================================================
 % Introduction 
 
 \justify
-\subsection*{Introduction}
+\subsection{Introduction}
 
-\lipsum[2-3]
+% TODO: Fill-in this part
 
+% Sections inputs
 \input{sections/SHAP_scores.tex}
 \input{sections/Anchors_LIME.tex}
 \input{sections/ASP_CXP.tex}
 \input{sections/Comparison.tex}
+
+\section{Conclusion}
 
 \printbibliography[title={References}]
 
