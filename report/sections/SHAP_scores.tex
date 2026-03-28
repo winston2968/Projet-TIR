@@ -8,12 +8,18 @@
 
 \section{Explanation methods based on Shapley values}
 
-Some of the most widely used methods for single decision features importance explanation are based on the 
+Some of the most widely used methods for local features importance explanation are based on the 
 Shapley values from game theory. These methods are so popular because they give a contribution score 
-for each feature in the decision that is easily understood by the user. This contribution score has a sign, 
+for each feature in the decision that is easily understood by the user. This contribution score has a sign and a magnitude, 
 so that a positive score means that the features contributes positively to the decision and the opposite for 
-a negative score, and it has a magnitude, so that a higher absolute score means a higher contribution towards 
-the respective class.
+a negative score. This result in straightforward visualizations of local features importance, as displayed in \ref{fig:shap_titanic} that shows Shapley-based contribution scores of features for a prediction of a naive Bayes classification model on an instance of the famous Titanic dataset. The goal here is to predict if the person represented by $x$ would have been able to survive from the Titanic. The model predicted the class \textit{yes}, and the scores tell us that the main contribuing feature is the \textit{Sex}: because the person is a female, she has good chances to survive. We can also see that the $Class$ of the person works slightly against its survival, as well as the fact that its an $adult$.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/shap_titanic.png}
+    \caption{Feature importance attributions computed with Shapley values for the decision of a naive Bayes model on an instance of the Titanic dataset. From \cite{strumbelj_efficient_2010}.}
+    \label{fig:shap_titanic}
+\end{figure}
 
 While these methods are amongst the most popular, that doesn't mean that they are superior, as we will see 
 the several shortcomings later.
@@ -21,15 +27,15 @@ the several shortcomings later.
 \subsection{Game theory preliminaries}
 
 In game theory, Shapley values provide a mathematically fair and unique method to attribute the payoff of 
-a cooperative game to the players. Formally, a coalitional game $(\mF, v)$ is represented by a set of $n$ 
+a cooperative game to the players. Formally, a coalitional game $(\mF, v)$ is composed of a set of $n$ 
 players $\mF = \{1, \dots, n\}$, and a characteristic function $v : \mP(\mF) \rightarrow \R$ that represents 
 the payoff for a subset of players $\mS \subset \mF$ (a coalition). Then, the Shapley value for a single player 
 $i \in \mF$, noted $\phi_i(v)$ is defined as follows in \cite{merrick_explanation_2020}:
 
 \begin{definition}[Shapley value]
-    $$
-        \phi_i(v) = \frac{1}{n} \sum_{\mS \in \mF\backslash\{i\}} \binom{n-1}{|\mS|}^{-1} \bigl( v(\mS \cup \{i\}) - v(\mS) \bigr)
-    $$
+    \begin{equation}
+        \phi_i(v) = \frac{1}{n} \sum_{\mS \subset \mF\backslash\{i\}} \binom{n-1}{|\mS|}^{-1} \bigl( v(\mS \cup \{i\}) - v(\mS) \bigr)
+    \end{equation}
 \end{definition}
 
 Therefore, the Shapley value for a player $i$ is computed by going through all the coalitions of players not containing $i$ and looking at the payoff difference with and without the player $i$ (with a normalization factor).
@@ -38,60 +44,64 @@ The Shapley value of a coalitional game $(\mF, v)$ is the only solution that res
 \begin{itemize}
     \item \emph{Efficiency}: The worth of the coalition containing all players is distributed losslessly
     among the players :
-    $$
+    \begin{equation} 
+        \label{eq:efficiency}
         \sum_{i \in \mF} \phi_i(v) = v(\mF) - v(\emptyset)
-    $$ 
+    \end{equation}
     
-    \item \emph{Null Player}: If a player contributes nothing to each coalition, then its Shapley value is zero :
-    \[
-        \forall i \in \mF \quad \bigl[ \forall \mS \subset \mF \quad v(\mS \cup \{i\}) = v(\mS) \bigr] \Longrightarrow \phi_i(v) = 0
-    \]
+    \item \emph{Null Player}: If a player contributes nothing to any coalition, then its Shapley value is zero :
+    \begin{equation} 
+        \label{eq:null_player}
+        \forall i \in \mF \quad \bigl[ \forall \mS \subset \mF\backslash\{i\} \quad v(\mS \cup \{i\}) = v(\mS) \bigr] \Longrightarrow \phi_i(v) = 0
+    \end{equation}
 
-    \item \emph{Symmetry}: Any two players that play equal roles amongst all coalition receive the same Shapley value :
-    \[
+    \item \emph{Symmetry}: Any two players that play equal roles amongst all coalitions receive the same Shapley value :
+    \begin{equation} 
+        \label{eq:symmetry}
         \forall i,j \in \mF \quad \bigl[\forall \mS \subset \mF\backslash\{i,j\}\quad v(\mS \cup \{i\}) = v(\mS \cup \{j\}) \bigr] \Longrightarrow \phi_i(v) = \phi_j(v)
-    \]
+    \end{equation}
 
     \item \emph{Additivity}: Let $v_1$ and $v_2$ be two characteristic funtions, the Shapley value respects 
     the additivity of functions :
-    \[
+    \begin{equation} 
+        \label{eq:additivity}
         \phi(v_1 + v_2) = \phi(v_1) + \phi(v_2)
-    \]
+    \end{equation}
 \end{itemize}
 
 \subsection{Shapley values for feature explanation}
 
-In ML, Shapley values allocates the predicted value of a specific instance fairly amongst all the features. 
+In ML, we treat each feature as a player, and the Shapley values allocate the predicted value of a specific instance fairly amongst all the features. 
 Thus, the Shapley values represent the contribution (positive or negative) of each feature in the decision to explain.
 
-Formally, let $x \in \mbF$ be the input where $\mbF = \mbF_1 \times \cdots \times \mbF_2$ is the input space 
+Formally, let $x \in \mbF$ be the instance to explain where $\mbF = \mbF_1 \times \cdots \times \mbF_2$ is the input space 
 of our model (each $\mbF_i$ is the space of the feature $i$), and $f(x)$ is the predicted value of our model 
-for a specific class ($f: \mbF \longrightarrow \left[-1, +1 \right]$). We consider the coalitional game represented 
+for a specific class. We consider the coalitional game represented 
 by $\mF = \{1, \dots, n \}$ the set of numbered features that will be our players, and the characteristic 
 function $v : \mP(\mF) \longrightarrow \R$ defined as follows:
 \begin{equation}
     \forall \mS \subset \mF \quad v(\mS) = \mbE[f(X) | X_{\mS} = x_{\mS}]
 \end{equation}
-where $X_{\mS} = x_{\mS}$ means that instances $X$ and $x$ share the same values for the features in $\mS$.
-
-The characteristic function is the mean value of the predictions on inputs that share the same values for the 
+where $X_{\mS} = x_{\mS}$ means that instances $X$ and $x$ share the same values for the features in $\mS$. The characteristic function is the mean value of the predictions on inputs that share the same values for the 
 features in $\mS$.
 
 Finally, we can define the Shapley value of a feature $i$ in the wish of explaining the prediction of an 
 input $x$ as follows:
-\begin{equation}    
-    \phi_i = \frac{1}{n} \sum_{\mS \in \mF\backslash\{i\}} \binom{n-1}{|\mS|}^{-1} \bigl( \mbE[f(X) | X_{\mS\backslash\{i\}} = x_{\mS\backslash\{i\}}] - \mbE[f(X) | X_{\mS} = x_{\mS}] \bigr)
-\end{equation}
+\begin{definition}[Shapley value for a feature $i$]
+    \label{def:shapley_feature}
+    \begin{equation}
+        \phi_i = \frac{1}{n} \sum_{\mS \in \mF\backslash\{i\}} \binom{n-1}{|\mS|}^{-1} \bigl( \mbE[f(X) | X_{\mS\backslash\{i\}} = x_{\mS\backslash\{i\}}] - \mbE[f(X) | X_{\mS} = x_{\mS}] \bigr)
+    \end{equation}
+\end{definition}
 
 \begin{remark}
     Every Shapley value computed will be based on the choice of the distribution of the reference instances 
-    $X$, and we will see later how it matters. Moreover, we can deduce from the above definitions and the 
-    efficiency axiom the following property:
+    $X$, and we will see later how it matters. Moreover, we can deduce from the above definition \ref{def:shapley_feature} and the 
+    efficiency axiom \ref{eq:efficiency} the following property:
     \begin{equation}
         \sum_{i \in \mF} \phi_i(v) = \mbE[f(X) | X_{\mF} = x_{\mF}] - \mbE[f(X) | X_{\emptyset} = x_{\emptyset}] = f(x) - \mbE[f(X)]
     \end{equation} 
-    Therefore, the sum of the Shapley values of all features equals to the predicted value minus a reference 
-    contribution that is the mean of all predictions (for inputs based on a specific distribution).
+    Therefore, the sum of the Shapley values of all features equals to the predicted value minus a \textit{reference contribution} that is the mean of all predictions (for inputs based on a specific distribution).
 \end{remark}
 
 
@@ -101,7 +111,7 @@ As you may have noticed, computing exact Shapley values has an exponential compl
 of features. Indeed, it requires exploring all the subcoalitions $\mS$ of $\mF\backslash\{i\}$. In practice, 
 this problem becomes intractable when playing with hundreds of features \cite{strumbelj_efficient_2010}. 
 Moreover, the calculation of the characteristic function $v(\mS)$ is also intractable as it requires 
-exploring all the input space $\mbF$.
+exploring the input space $\mbF$.
 
 Both issues are solved notably in \cite{merrick_explanation_2020} by using sampling methods. 
 For the former, sub-coalitions $\mS \subset \mF\backslash\{i\}$ are sampled by taking all the 
@@ -145,19 +155,18 @@ function $v_a$ associated :
 Concretely, $v_a(\mS) = 1$ if all the instances sharing the same values as $x$ on the features in $\mS$ get 
 predicted a similar value (same class in the case of classification). Therefore, $v_a(\mS)$ is equivalent as 
 knowing if $\mS$ is a weak abductive explanation (wAXp) of $x$. $v_a$ and the other proposed characteristic 
-functions respects two important property: \textit{strong value independance} (mapping the input space into 
+functions respect two important properties: \textit{strong value independance} (mapping the input space into 
 another one by a surjection doesn't change the value of the characteristic function) and \textit{feature irrelevancy} 
 (a feature that doesn't influence the prediction gets attributed a Shapley value of $0$). These properties are 
 desirable to get around the previously mentionned issues.
 
 On the other hand, \cite{merrick_explanation_2020} pinpoint the importance of the choice of the reference distribution, 
-noted $\mD^{ref}$, used in the characteristic function while computing $\mbE[f(X)|X_\mS = x_\mS]$. Indeed, we 
+noted $\mD^{ref}$, used in the characteristic function to compute $\mbE[f(X)|X_\mS = x_\mS]$. Indeed, we 
 could decide that $X$ follows the input distribution (distribution of the dataset) $\mD^{inp}$ (used in SHAP 
 and KernelSHAP), the joint-marginal distribution of features $\mD^{J.M.}$ (used in QII), or even a uniform 
-distribution over the input space $\mD^{unif}$. While chosing $\mD^{inp}$ take into account only instances 
-present in the dataset and can suffer from the proeminance of some feature values that is directly reflected 
-in the SHAP-scores, chosing $\mD^{J.M.}$ assumes independance between all the features, and like $\mD^{unif}$, 
-can sample unrealistic instances that will have an impact in the computed attributions. Therefore, the paper 
+distribution over the input space $\mD^{unif}$. While chosing $\mD^{inp}$ takes into account only instances 
+present in the dataset and can suffer from the proeminance of some feature values, chosing $\mD^{J.M.}$ assumes independance between all the features, and like $\mD^{unif}$, 
+can sample unrealistic instances that will have an impact in the computed attributions. These choices are directly reflected in the computed SHAP scores, revealing why different methods can give very different SHAP scores. Therefore, the paper 
 proposes the Formulate-Approximate-Explain framework when facing this choice, saying that we should firstly 
 formulate a contrastive question related to the classification task to pin down the desired reference distribution. 
 The choice in distribution lies in the question of "Why does this instance received this score 
@@ -167,9 +176,9 @@ Finally, there exists model-specific SHAP-based methods for explaining decisions
 For instance, \cite{campbell_exact_2022} presents Eject, intended to give more model-related explanations while 
 solving shortcomings of previous TreeSHAP method that computes SHAP scores on Tree-based models (classification 
 trees and trees ensembles models like random forests). Eject computes the utility of a coalition of features 
-for a specific instance by going down the decision branch and "ejecting" (returning the predicted value of the 
+for a specific instance by going down the decision branch and \textit{ejecting} (returning the predicted value of the 
 previously visited node) when the branch uses a feature not present in the coalition. This notably ensures the 
-\textit{local dummy player} property: a feature not used in the prediction gets a score of 0.
+\textit{local dummy player} property: a feature not used in the prediction gets a score of 0. Also, Eject method allows to compute exact Shapley values rather than approximations.
 On the other hand, CNN SHAP proposed in \cite{zhao_shap_2021} aims to compute SHAP scores on convolutive neural 
 networks (more precisely CNN text classification models), and thus on non-structured data. CNN SHAP firstly let 
 the convolutive layers of the model extract the semantic features, and compute the SHAP scores on these extracted 
@@ -178,5 +187,8 @@ deduplication step for features having similar semantic meanings and a merging s
 corresponding input parts overlap. Finally, the computed SHAP scores can directly be attributed to the input areas.
 
 
+\subsection{Synthesis}
+
+In summary, Shapley-based methods give local explanation of feature contributions. While some model-specific methods ensure the tractability of exact computation of Shapley values, this is an exponential complexity problem in terms of the number of feature subsets, solved by sampling-based approximation methods. Different methods have been developped to surpass the shortcomings of the original SHAP framework, by modifying the characteristic function used in the computation of the Shapley values, or the distribution of sampled reference instances that plays a major role in the liability of the contribution scores.
 
 
