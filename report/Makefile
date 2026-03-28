@@ -1,23 +1,25 @@
-# Configuration
-MAIN = main
-LATEX = pdflatex
-BIB = biber
+# --- Configuration ---
+PDF_NAME = main
+LATEX_ENGINE = pdflatex
+# Si tes fichiers sont à la racine, utilise . sinon mets le chemin (ex: report)
+REPORT_DIR = .
+MAIN_FILE = $(PDF_NAME).tex
 
-# Règle par défaut : compile le PDF
-compile: $(MAIN).pdf
+# --- Règles ---
 
-# Compilation PDF avec biber
-$(MAIN).pdf: $(MAIN).tex
-	@echo "=== Première compilation LaTeX ==="
-	$(LATEX) $(MAIN).tex
-	@echo "=== Traitement bibliographie avec Biber ==="
-	$(BIB) $(MAIN)
-	@echo "=== Deuxième compilation LaTeX ==="
-	$(LATEX) $(MAIN).tex
-	@echo "=== Troisième compilation LaTeX pour TOC et références croisées ==="
-	$(LATEX) $(MAIN).tex
+# La première règle est celle par défaut
+all: $(REPORT_DIR)/$(PDF_NAME).pdf
 
-# Nettoyage des fichiers temporaires générés par la compilation
+# Règle de compilation principale
+# Correction : indentation par TAB obligatoire
+$(REPORT_DIR)/$(PDF_NAME).pdf: $(MAIN_FILE)
+	@echo "==> Compilation du rapport avec latexmk..."
+	latexmk -$(LATEX_ENGINE) -pdf -f -interaction=nonstopmode \
+		-output-directory=$(REPORT_DIR) $(MAIN_FILE)
+
+# Nettoyage des fichiers auxiliaires
+# On ajoute le dossier REPORT_DIR pour être sûr de tout supprimer
+>>>>>>> Stashed changes
 clean:
 	find . -type f \( \
 		-name "*.aux" -o -name "*.log" -o -name "*.out" -o -name "*.toc" \
@@ -27,20 +29,7 @@ clean:
 		-o -name "*.bcf" -o -name "*.run.xml" \
 	\) -delete
 
-# Nettoyage complet : enlève le PDF et les fichiers temporaires
+# Nettoyage complet
 cleanall: clean
-	rm -f $(MAIN).pdf
-
-# Visualiser le PDF
-view: $(MAIN).pdf
-	open $(MAIN).pdf
-
-build: 
-	make cleanall && make compile && make clean
-
-# Juste la bibliographie
-bib:
-	$(BIB) $(MAIN)
-
-compile-short: 
-	make cleanall && $(LATEX) $(MAIN).tex && make clean
+	@echo "==> Suppression du PDF..."
+	@rm -f $(PDF_NAME).pdf

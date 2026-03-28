@@ -6,92 +6,131 @@
 \newcommand{\mbE}{\mathbb{E}}
 
 
-
 \section{Explanation methods based on Shapley values}
 
-Some of the most widely used methods for single decision features importance explanation are based on the Shapley values from game theory. These methods are so popular because they give a contribution score for each feature in the decision that is easily understood by the user. This contribution score has a sign, so that a positive score means that the features contributes positively to the decision and the opposite for a negative score, and it has a magnitude, so that a higher absolute score means a higher contribution towards the respective class.
+Some of the most widely used methods for single decision features importance explanation are based on the 
+Shapley values from game theory. These methods are so popular because they give a contribution score 
+for each feature in the decision that is easily understood by the user. This contribution score has a sign, 
+so that a positive score means that the features contributes positively to the decision and the opposite for 
+a negative score, and it has a magnitude, so that a higher absolute score means a higher contribution towards 
+the respective class.
 
-While these methods are amongst the most popular, that doesn't mean that they are superior, as we will see the several shortcomings later.
-
+While these methods are amongst the most popular, that doesn't mean that they are superior, as we will see 
+the several shortcomings later.
 
 \subsection{Game theory preliminaries}
 
-In game theory, Shapley values provide a mathematically fair and unique method to attribute the payoff of a cooperative game to the players. Formally, a coalitional game $(\mF, v)$ is represented by a set of $n$ players $\mF = \{1, \dots, n\}$, and a characteristic function $v : \mP(\mF) \rightarrow \R$ that represents the payoff for a subset of players $\mS \subset \mF$ (a coalition). Then, the Shapley value for a single player $i \in \mF$, noted $\phi_i(v)$ is defined as follows in \cite{merrick_explanation_2020}:
+In game theory, Shapley values provide a mathematically fair and unique method to attribute the payoff of 
+a cooperative game to the players. Formally, a coalitional game $(\mF, v)$ is represented by a set of $n$ 
+players $\mF = \{1, \dots, n\}$, and a characteristic function $v : \mP(\mF) \rightarrow \R$ that represents 
+the payoff for a subset of players $\mS \subset \mF$ (a coalition). Then, the Shapley value for a single player 
+$i \in \mF$, noted $\phi_i(v)$ is defined as follows in \cite{merrick_explanation_2020}:
 
 \begin{definition}[Shapley value]
-    \[
+    $$
         \phi_i(v) = \frac{1}{n} \sum_{\mS \in \mF\backslash\{i\}} \binom{n-1}{|\mS|}^{-1} \bigl( v(\mS \cup \{i\}) - v(\mS) \bigr)
-    \]
+    $$
 \end{definition}
 
 Therefore, the Shapley value for a player $i$ is computed by going through all the coalitions of players not containing $i$ and looking at the payoff difference with and without the player $i$ (with a normalization factor).
 
 The Shapley value of a coalitional game $(\mF, v)$ is the only solution that respects the four following powerful axioms, as described in \cite{fryer_shapley_2021}:
 \begin{itemize}
-    \item[Efficiency] The worth of the coalition containing all players is distributed losslessly among the players :
-    \[
+    \item \emph{Efficiency}: The worth of the coalition containing all players is distributed losslessly
+    among the players :
+    $$
         \sum_{i \in \mF} \phi_i(v) = v(\mF) - v(\emptyset)
-    \] 
+    $$ 
     
-    \item[Null Player] If a player contributes nothing to each coalition, then its Shapley value is zero :
+    \item \emph{Null Player}: If a player contributes nothing to each coalition, then its Shapley value is zero :
     \[
         \forall i \in \mF \quad \bigl[ \forall \mS \subset \mF \quad v(\mS \cup \{i\}) = v(\mS) \bigr] \Longrightarrow \phi_i(v) = 0
     \]
 
-    \item[Symmetry] Any two players that play equal roles amongst all coalition receive the same Shapley value :
+    \item \emph{Symmetry}: Any two players that play equal roles amongst all coalition receive the same Shapley value :
     \[
         \forall i,j \in \mF \quad \bigl[\forall \mS \subset \mF\backslash\{i,j\}\quad v(\mS \cup \{i\}) = v(\mS \cup \{j\}) \bigr] \Longrightarrow \phi_i(v) = \phi_j(v)
     \]
 
-    \item{Additivity} Let $v_1$ and $v_2$ be two characteristic funtions, the Shapley value respects the additivity of functions :
+    \item \emph{Additivity}: Let $v_1$ and $v_2$ be two characteristic funtions, the Shapley value respects 
+    the additivity of functions :
     \[
         \phi(v_1 + v_2) = \phi(v_1) + \phi(v_2)
     \]
 \end{itemize}
 
-
 \subsection{Shapley values for feature explanation}
 
-In ML, Shapley values allocates the predicted value of a specific instance fairly amongst all the features. Thus, the Shapley values represent the contribution (positive or negative) of each feature in the decision to explain.
+In ML, Shapley values allocates the predicted value of a specific instance fairly amongst all the features. 
+Thus, the Shapley values represent the contribution (positive or negative) of each feature in the decision to explain.
 
-Formally, let $x \in \mbF$ be the input where $\mbF = \mbF_1 \times \cdots \times \mbF_2$ is the input space of our model (each $\mbF_i$ is the space of the feature $i$), and $f(x)$ is the predicted value of our model for a specific class ($f: \mbF \longrightarrow \left[-1, +1 \right]$). We consider the coalitional game represented by $\mF = \{1, \dots, n \}$ the set of numbered features that will be our players, and the characteristic function $v : \mP(\mF) \longrightarrow \R$ defined as follows:
-\[
+Formally, let $x \in \mbF$ be the input where $\mbF = \mbF_1 \times \cdots \times \mbF_2$ is the input space 
+of our model (each $\mbF_i$ is the space of the feature $i$), and $f(x)$ is the predicted value of our model 
+for a specific class ($f: \mbF \longrightarrow \left[-1, +1 \right]$). We consider the coalitional game represented 
+by $\mF = \{1, \dots, n \}$ the set of numbered features that will be our players, and the characteristic 
+function $v : \mP(\mF) \longrightarrow \R$ defined as follows:
+\begin{equation}
     \forall \mS \subset \mF \quad v(\mS) = \mbE[f(X) | X_{\mS} = x_{\mS}]
-\]
+\end{equation}
 where $X_{\mS} = x_{\mS}$ means that instances $X$ and $x$ share the same values for the features in $\mS$.
 
-The characteristic function is the mean value of the predictions on inputs that share the same values for the features in $\mS$.
+The characteristic function is the mean value of the predictions on inputs that share the same values for the 
+features in $\mS$.
 
-Finally, we can define the Shapley value of a feature $i$ in the wish of explaining the prediction of an input $x$ as follows:
-\[
+Finally, we can define the Shapley value of a feature $i$ in the wish of explaining the prediction of an 
+input $x$ as follows:
+\begin{equation}    
     \phi_i = \frac{1}{n} \sum_{\mS \in \mF\backslash\{i\}} \binom{n-1}{|\mS|}^{-1} \bigl( \mbE[f(X) | X_{\mS\backslash\{i\}} = x_{\mS\backslash\{i\}}] - \mbE[f(X) | X_{\mS} = x_{\mS}] \bigr)
-\]
+\end{equation}
 
 \begin{remark}
-    Every Shapley value computed will be based on the choice of the distribution of the reference instances $X$, and we will see later how it matters. Moreover, we can deduce from the above definitions and the efficiency axiom the following property:
-    \[ \sum_{i \in \mF} \phi_i(v) = \mbE[f(X) | X_{\mF} = x_{\mF}] - \mbE[f(X) | X_{\emptyset} = x_{\emptyset}] = f(x) - \mbE[f(X)] \]
-    Therefore, the sum of the Shapley values of all features equals to the predicted value minus a reference contribution that is the mean of all predictions (for inputs based on a specific distribution).
+    Every Shapley value computed will be based on the choice of the distribution of the reference instances 
+    $X$, and we will see later how it matters. Moreover, we can deduce from the above definitions and the 
+    efficiency axiom the following property:
+    \begin{equation}
+        \sum_{i \in \mF} \phi_i(v) = \mbE[f(X) | X_{\mF} = x_{\mF}] - \mbE[f(X) | X_{\emptyset} = x_{\emptyset}] = f(x) - \mbE[f(X)]
+    \end{equation} 
+    Therefore, the sum of the Shapley values of all features equals to the predicted value minus a reference 
+    contribution that is the mean of all predictions (for inputs based on a specific distribution).
 \end{remark}
 
 
 \subsection{Approximation}
 
-As you may have noticed, computing exact Shapley values has an exponential complexity in terms of the number of features. Indeed, it requires to explore all the subcoalitions $\mS$ of $\mF\backslash\{i\}$. In practice, this problem becomes intractable when playing with hundreds of features \cite{strumbelj_efficient_2010}. Moreover, the calculation of the characteristic function $v(\mS)$ is also intractable as it requires to explore all the input space $\mbF$.
+As you may have noticed, computing exact Shapley values has an exponential complexity in terms of the number 
+of features. Indeed, it requires exploring all the subcoalitions $\mS$ of $\mF\backslash\{i\}$. In practice, 
+this problem becomes intractable when playing with hundreds of features \cite{strumbelj_efficient_2010}. 
+Moreover, the calculation of the characteristic function $v(\mS)$ is also intractable as it requires 
+exploring all the input space $\mbF$.
 
-Both issues are solved notably in \cite{merrick_explanation_2020} by using sampling methods. For the former, sub-coalitions $\mS \subset \mF\backslash\{i\}$ are sampled by taking all the features preceding $i$ in random orderings $O_j$ of $\mF$: we define $\mS_j = Pre_i(O_j)$. For the latter, The reference instances $X$ are sampled following the chosen distribution.
+Both issues are solved notably in \cite{merrick_explanation_2020} by using sampling methods. 
+For the former, sub-coalitions $\mS \subset \mF\backslash\{i\}$ are sampled by taking all the 
+features preceding $i$ in random orderings $O_j$ of $\mF$: we define $\mS_j = Pre_i(O_j)$. For the latter, 
+ehe reference instances $X$ are sampled following the chosen distribution.
 
 \begin{remark}
-    These two approximation solutions allow us to build confidence intervals over the computed Shapley values. Each feature contribution can now be represented as an interval. This is particularly interesting because this gives us more information whether an approximation of the contribution is relevant or not. If a Shapley value is approximated to be close to zero, its confidence interval may take values from negatives to positives values, meaning that we cannot deduce any valuable information about whether this feature contributes positively or negatively in the decision. Remember that if we could compute the exact Shapley value, this case would not exist.
+    These two approximation solutions allow us to build confidence intervals over the computed Shapley values. 
+    Each feature contribution can now be represented as an interval. This is particularly interesting because 
+    this gives us more information whether an approximation of the contribution is relevant or not. If a Shapley 
+    value is approximated to be close to zero, its confidence interval may take values from negatives to positives 
+    values, meaning that we cannot deduce any valuable information about whether this feature contributes 
+    positively or negatively in the decision. Remember that if we could compute the exact Shapley value, this 
+    case would not exist.
 \end{remark}
-
-
 
 \subsection{Different methods}
 
-Several explanation methods based on Shapley values have been proposed through the past years. What is described above is the original SHAP (SHapley Additive exPlanations) framework, that serves as the groundwork for newer methods. Various papers pinpointed the shortcomings of SHAP (\cite{letoffe_towards_2025}\cite{fryer_shapley_2021}), and mainly the fact that it can attribute more importance to features having less influence (or even no influence at all) in the decision.
+Several explanation methods based on Shapley values have been proposed through the past years. What is described 
+above is the original SHAP (SHapley Additive exPlanations) framework, that serves as the groundwork for newer 
+methods. Various papers pinpointed the shortcomings of SHAP (\cite{letoffe_towards_2025}\cite{fryer_shapley_2021}), 
+and mainly the fact that it can attribute more importance to features having less influence (or even no influence 
+at all) in the decision.
 
-On the one hand, \cite{letoffe_towards_2025} claims that this issue can be solely attributed to the characteristic function used, and the authors propose new characteristic functions based on abductive and contrastive explanations (AXps and CXps). They introduce a similarity predicate $\sigma$ defined below and one example of characteristic function $v_a$ associated :
-\[
+On the one hand, \cite{letoffe_towards_2025} claims that this issue can be solely attributed to the characteristic 
+function used, and the authors propose new characteristic functions based on abductive and contrastive explanations 
+(AXps and CXps). They introduce a similarity predicate $\sigma$ defined below and one example of characteristic 
+function $v_a$ associated :
+\begin{equation}
     \sigma(y) = \begin{cases}
         1 & \text{if} ~ f(y) \approx f(x) \\
         0 & \text{else}
@@ -100,14 +139,43 @@ On the one hand, \cite{letoffe_towards_2025} claims that this issue can be solel
     v_a(\mS) = \begin{cases}
         1 & \text{if} ~ \mbE[\sigma(X) | X_\mS = x_\mS] = 1 \\
         0 & \text{else}
-    \end{cases}
-\]
-Concretely, $v_a(\mS) = 1$ if all the instances sharing the same values as $x$ on the features in $\mS$ get predicted a similar value (same class in the case of classification). Therefore, $v_a(\mS)$ is equivalent as knowing if $\mS$ is a weak abductive explanation (wAXp) of $x$. $v_a$ and the other proposed characteristic functions respects two important property: \textit{strong value independance} (mapping the input space into another one by a surjection doesn't change the value of the characteristic function) and \textit{feature irrelevancy} (a feature that doesn't influence the prediction gets attributed a Shapley value of $0$). These properties are desirable to get around the previously mentionned issues.
+    \end{cases}    
+\end{equation}
 
-On the other hand, \cite{merrick_explanation_2020} pinpoint the importance of the choice of the reference distribution, noted $\mD^{ref}$, used in the characteristic function while computing $\mbE[f(X)|X_\mS = x_\mS]$. Indeed, we could decide that $X$ follows the input distribution (distribution of the dataset) $\mD^{inp}$ (used in SHAP and KernelSHAP), the joint-marginal distribution of features $\mD^{J.M.}$ (used in QII), or even a uniform distribution over the input space $\mD^{unif}$. While chosing $\mD^{inp}$ take into account only instances present in the dataset and can suffer from the proeminance of some feature values that is directly reflected in the SHAP-scores, chosing $\mD^{J.M.}$ assumes independance between all the features, and like $\mD^{unif}$, can sample unrealistic instances that will have an impact in the computed attributions. Therefore, the paper proposes the Formulate-Approximate-Explain framework when facing this choice, saying that we should firstly formulate a contrastive question related to the classification task to pin down the desired reference distribution. The choice in distribution lies in the question of "Why does this instance received this score \textit{in contrast of} these other references".
+Concretely, $v_a(\mS) = 1$ if all the instances sharing the same values as $x$ on the features in $\mS$ get 
+predicted a similar value (same class in the case of classification). Therefore, $v_a(\mS)$ is equivalent as 
+knowing if $\mS$ is a weak abductive explanation (wAXp) of $x$. $v_a$ and the other proposed characteristic 
+functions respects two important property: \textit{strong value independance} (mapping the input space into 
+another one by a surjection doesn't change the value of the characteristic function) and \textit{feature irrelevancy} 
+(a feature that doesn't influence the prediction gets attributed a Shapley value of $0$). These properties are 
+desirable to get around the previously mentionned issues.
 
-Finally, there exists model-specific SHAP-based methods for explaining decisions of classifiers with known designs. For instance, \cite{campbell_exact_2022} presents Eject, intended to give more model-related explanations while solving shortcomings of previous TreeSHAP method that computes SHAP scores on Tree-based models (classification trees and trees ensembles models like random forests). Eject computes the utility of a coalition of features for a specific instance by going down the decision branch and "ejecting" (returning the predicted value of the previously visited node) when the branch uses a feature not present in the coalition. This notably ensures the \textit{local dummy player} property: a feature not used in the prediction gets a score of 0.
-On the other hand, CNN SHAP proposed in \cite{zhao_shap_2021} aims to compute SHAP scores on convolutive neural networks (more precisely CNN text classfication models), and thus on non-structured data. CNN SHAP firstly let the convolutive layers of the model extract the semantic features, and compute the SHAP scores on these extracted features, while keeping in memory the part of the input corresponding to each feature. Then, there's a deduplication step for features having similar semantic meanings and a merging step for features whose corresponding input parts overlap. Finally, the computed SHAP scores can directly be attributed to the input areas.
+On the other hand, \cite{merrick_explanation_2020} pinpoint the importance of the choice of the reference distribution, 
+noted $\mD^{ref}$, used in the characteristic function while computing $\mbE[f(X)|X_\mS = x_\mS]$. Indeed, we 
+could decide that $X$ follows the input distribution (distribution of the dataset) $\mD^{inp}$ (used in SHAP 
+and KernelSHAP), the joint-marginal distribution of features $\mD^{J.M.}$ (used in QII), or even a uniform 
+distribution over the input space $\mD^{unif}$. While chosing $\mD^{inp}$ take into account only instances 
+present in the dataset and can suffer from the proeminance of some feature values that is directly reflected 
+in the SHAP-scores, chosing $\mD^{J.M.}$ assumes independance between all the features, and like $\mD^{unif}$, 
+can sample unrealistic instances that will have an impact in the computed attributions. Therefore, the paper 
+proposes the Formulate-Approximate-Explain framework when facing this choice, saying that we should firstly 
+formulate a contrastive question related to the classification task to pin down the desired reference distribution. 
+The choice in distribution lies in the question of "Why does this instance received this score 
+\textit{in contrast of} these other references".
+
+Finally, there exists model-specific SHAP-based methods for explaining decisions of classifiers with known designs. 
+For instance, \cite{campbell_exact_2022} presents Eject, intended to give more model-related explanations while 
+solving shortcomings of previous TreeSHAP method that computes SHAP scores on Tree-based models (classification 
+trees and trees ensembles models like random forests). Eject computes the utility of a coalition of features 
+for a specific instance by going down the decision branch and "ejecting" (returning the predicted value of the 
+previously visited node) when the branch uses a feature not present in the coalition. This notably ensures the 
+\textit{local dummy player} property: a feature not used in the prediction gets a score of 0.
+On the other hand, CNN SHAP proposed in \cite{zhao_shap_2021} aims to compute SHAP scores on convolutive neural 
+networks (more precisely CNN text classification models), and thus on non-structured data. CNN SHAP firstly let 
+the convolutive layers of the model extract the semantic features, and compute the SHAP scores on these extracted 
+features, while keeping in memory the part of the input corresponding to each feature. Then, there's a 
+deduplication step for features having similar semantic meanings and a merging step for features whose 
+corresponding input parts overlap. Finally, the computed SHAP scores can directly be attributed to the input areas.
 
 
 
