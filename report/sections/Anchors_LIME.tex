@@ -1,4 +1,4 @@
-\section{Different local model-agnostic explanation methods}
+\section{Perturbation model-agnostic methods}
 
 In this section, we present a set of perturbation method used in black-box 
 models explanation. A perturbation method can be defined by the 
@@ -28,4 +28,134 @@ in specific cases.
 
 \subsection{LIME (Local Interpretable Model-Agnostic Explainer)}
 
+% Model introduction 
+LIME founded the principe of perturbation method for classifiers explanation \cite{ribeiro_why_2016}. 
+It provides a local explanation of a black-box model behavior 
+$ f : \R^d \longrightarrow \R $ by training a simple explanation 
+model $g$ over perturbed samples. This method 
+is \emph{model-agnostic} because it doesn't depend on the black-box model 
+architecture. $f$ is considered as an oracle used to train $g$.
 
+% LIME technical aspects
+Formally, for an original interpretable representation $x' \in \{0, 1\}^{d'}$ of a
+sample $x \in \R^d$, it generates a set of perturbed samples $z'$ which are drawn
+by selecting uniformly some $x'$ non-zero components. This random sampling is weighted by 
+$\pi_x$ which defines a locality around $x'$ denoted $ \mathcal{Z}$. In practical, 
+$ \pi_x$ is an exponential kernel applied to a distance $D$. 
+To find the optimal model $g$, we can define a loss function $ \mathcal{L}(f,g, \pi_x)$ telling how 
+unfaithful $g$ is in approximating $f$ on $ \mathcal{Z}$. The objective is then to 
+minimize $ \mathcal{L}$ and having $ \Omega(g)$ low enough for human comprehension. 
+The LIME explanation is then produced by: 
+\begin{equation}
+    \xi(x) = \arg \min_{g \in G} \mathcal{L}(f,g, \pi_x) + \Omega(g)
+\end{equation}
+with $G$ the set of available explanation models \cite{ribeiro_why_2016}. Using $ \mathcal{L}$ and $ \Omega(g)$ 
+to find the best model $g$ ensures \emph{interpretability} and \emph{local fidelity}
+on the black-box model explanation. Finally, the local explanation of the model 
+is provided by the weights $w_g$ trained with $g(z') = w_g \cdot z'$.
+
+% Global interpretation 
+As stated at beginning, LIME provides a \emph{local} explanation of $f$. To ensure 
+a global explanation, the paper proposes a Sub-modular Picks LIME (SP-LIME) 
+which selects a set local and non-redundant LIME explanations to be given to the user \cite{ribeiro_why_2016}.
+To choose those explanations, the paper introduces the concept of coverage of a set 
+of instances which defines the importance of those instances. 
+
+\begin{definition}[Coverage]
+    Let $g$ be an explanation model and $ g_i = \xi(x_i)$ the explanation 
+    of the instance $x_i$, we construct the $|X| \times d'$ explanation matrix $ \mathcal{W}$ 
+    with $ \mathcal{W}_{i,j} = | w_{g_{i,j}} |$. Then, $I_j$ is the $j$-column of 
+    $W$ and denotes the global importance of that component in the explanation space. 
+    Then, the coverage of a set of instances $V$ is defined as the total importance 
+    of the features that appear at least one instance in $V$: 
+    \begin{equation}
+        c(V, \mathcal{W}, I) := \sum_{j=1}^{d'} \mathbbm{1}_{\{ \exists i \in V, \mathcal{W}_{i,j} > 0\}} I_j  
+    \end{equation}
+\end{definition}
+
+Finally, from a maximum number of global explanations $B$ set by the user, the 
+pick problem is defined by:
+    \begin{equation} \label{eq:}
+        Pick( \mathcal{W},I) = \underset{V, |V| \leqslant B}{\arg \max} \; c(V, \mathcal{W}, I) 
+    \end{equation}
+We want to select the highest coverage and non-redundant explanations to provide a global 
+one. 
+
+
+% Computing and limits
+Unfortunately, this system has limits. First, in practice, the pick problem is intractable, 
+so a greedy algorithm is used to compute it. 
+Secondly, LIME algorithm doesn't define clear boundaries of the explanation instances. Indeed, 
+all black-box models cannot be locally approximated by a linear one \cite{ribeiro_nothing_2016}. 
+Finally, the explanation results depend on the LIME parameters such as $B$, the distance metric 
+$D$ and the kernel $ \pi_x$. Changing one of them can change the interpretation and 
+undermining the reliability of this method \cite{wilking_fooling_2022}.
+
+\subsection{Anchors}
+
+Anchors is also a model-agnostic explanation method based on LIME system but enhanced in order
+to provide local sufficient conditions for prediction. Anchors are defined by short and 
+disjoint rules which are preferred by users for explanation \cite{ribeiro_anchors_2018}. It can be applied 
+on different set of domains (tabular, text, images, etc...) for different 
+tasks (classification, prediction, text generation, etc...).
+
+\begin{definition}[Anchors]
+    Formally, Anchors are built on a set of predicates $a$ called a "rules". We can 
+    also see it as a function of instances $x \in X$ :
+    $$ A : 
+        \begin{cases}
+            X \longrightarrow \{0, 1\} \\ 
+            x \longmapsto 
+            \begin{cases}
+                1 \text{ if all rules are true for } x \\
+                0 \text{ otherwise}
+            \end{cases}
+        \end{cases}
+    $$
+    to link a set of rules $A$ on a prediction $f(x)$ (where $f : X \longrightarrow Y$ 
+    is the black-box model). Finally, $A$ is an Anchor of $x$ if $A(x) = 1$ 
+    and $A$ is a sufficient condition for the prediction $y = f(x)$ :
+        \begin{equation}
+            \mathbb{E}_{\mathcal{D}(z \mid A)}[1_{f(x)=f(z)}] \geqslant \tau
+        \end{equation}
+    with $\tau$ the desired level of precision of the Anchor on $x$ \cite{ribeiro_anchors_2018}.
+    Here, $ \mathcal{D}(x \mid A)$ represents the distribution of neighbors of $x$ 
+    which satisfy the Anchor $A$. 
+\end{definition}
+
+Computing Anchors is the difficult part of the process. This is a combinatorial 
+optimization problem if we decide to choose anchors which satisfy a precision 
+constraint with high probability:
+    $$	\mathbb{P} (prec(A) \geqslant \tau) \geqslant 1 - \delta$$
+with $ prec(A) = \mathbb{E}_{\mathcal{D}(z \mid A)}(1_{f(x)=f(z)})$ called the Anchors 
+"precision". Among those anchors, we choose the largest coverage ones, where coverage is :
+\begin{equation}
+    cov(A) = \mathbb{E}_{\mathcal{D}(z)} (A(z))
+\end{equation}
+Finally, the optimization problem can be described by :
+\begin{equation}
+    \max_{\mathbb{P} (prec(A) \geqslant \tau) \geqslant 1 - \delta} cov(A)
+\end{equation}
+
+Because the number of all possible Anchor is exponential, we can perform an 
+exhaustive search. That's why the article introduced the Bottom-Up approach:
+\begin{enumerate}
+    \item \emph{Initialization}: The anchor $A$ is initialized as an empty rule (applying to all instances).
+    \item \emph{Candidate Generation}: In each iteration, a set of candidate rules $\mathcal{A}$ is generated by extending $A$ with one additional feature predicate $\{a_i\}$: $\mathcal{A} = \{A \wedge a_i, A \wedge a_{i+1}, A \wedge a_{i+2}, ...\}$
+    \item \emph{Selection via Multi-Armed Bandit (MAB)}: To identify the best 
+    candidate without an exhaustive number of calls to $f$, the problem is 
+    formulated as a pure-exploration multi-armed bandit problem. The \emph{KL-LUCB} 
+    algorithm is used to find the rule with the highest precision using a minimal 
+    set of samples \cite{ribeiro_anchors_2018}.
+    \item \emph{Termination}: The process terminates when a rule meets the statistical precision constraint: $\mathbb{P} (prec(A) \geqslant \tau) \geqslant 1 - \delta$.
+\end{enumerate}
+
+To address the limitations of a purely greedy search, the algorithm extends the 
+construction to a \emph{Beam Search} of size $B$.
+It maintains a set of $B$ current candidates instead of a single one.
+Among the multiple anchors identified that satisfy the precision threshold $\tau$, 
+the algorithm outputs the one with the highest coverage $cov(A)$, effectively optimizing the original problem.
+
+To provide a global understanding of the model, the article adapts a \emph{Submodular Pick} (SP) procedure. 
+The goal is to select a set of $K$ anchors that are non-redundant and cover as 
+many instances in the validation set similar to the approach used in LIME \cite{ribeiro_anchors_2018,ribeiro_why_2016}.
