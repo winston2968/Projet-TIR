@@ -19,7 +19,6 @@ $(REPORT_DIR)/$(PDF_NAME).pdf: $(MAIN_FILE)
 
 # Nettoyage des fichiers auxiliaires
 # On ajoute le dossier REPORT_DIR pour être sûr de tout supprimer
->>>>>>> Stashed changes
 clean:
 	find . -type f \( \
 		-name "*.aux" -o -name "*.log" -o -name "*.out" -o -name "*.toc" \

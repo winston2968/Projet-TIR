@@ -210,10 +210,6 @@
 }
 
 % ---- Bib ----- 
-
-\AtEveryBibitem{%
-  \clearfield{note}%
-}
 \usepackage[backend=biber, style=numeric-comp, sorting=none]{biblatex} 
 
 % Biblio parameters
@@ -226,6 +222,11 @@
     }
   }
 }
+
+\AtEveryBibitem{%
+  \clearfield{note}%
+}
+
 \addbibresource{references.bib}
 
 
