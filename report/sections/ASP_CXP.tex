@@ -1,0 +1,151 @@
+
+\section{Abductive Explanation methods}
+
+In this section, we present abductive explanation methods for classifiers. Unlike
+perturbation-based methods, abductive explanations provide \emph{formal guarantees}
+on the quality of the produced explanations. We focus on two works: the
+algorithmic approach of \textcite{ignatiev_abduction-based_2019}, which
+introduces AXp's, and the theoretical extension of \textcite{cooper_abductive_2024}, 
+which generalizes them to constrained settings via CXp's.
+
+\begin{remark}[Notation]
+    We consider a classifier $\kappa : \mathbb{F} \to Cl$
+    where $\mathbb{F}$ is the feature space and $Cl$ the set of classes. An instance
+    $x \in \mathbb{F}$ is described by a set of literals $(f_i, v)$. A partial assignment
+    $E \subseteq x$ is a subset of literals of $x$. We write $E(y)$ to mean that
+    instance $y$ agrees with $E$ on all features it defines.
+\end{remark} 
+
+\subsection{AXp (Abductive Explanations)}
+
+\textcite{ignatiev_abduction-based_2019} propose a constraint-agnostic framework to compute minimal 
+explanations for any ML model. The core idea is to encode the classifier as a set of constraints $\mathcal{F}$ 
+in a formal system (e.g. MILP or SMT), so that finding an explanation reduces to computing a
+\emph{prime implicant} of $\mathcal{F}$.
+
+\begin{definition}[AXp]
+    Let $x \in \mathbb{F}$ and $\kappa(x) = c$.
+    A weak AXp of $\kappa(x)$ is a partial assignment $E \subseteq x$ such that:
+    $$\forall y \in \mathbb{F},\; E(y) \Rightarrow \kappa(y) = \kappa(x)$$
+    An AXp is a subset-minimal weak AXp. Intuitively, an AXp is the smallest set of
+    feature values that is \emph{sufficient} to guarantee the prediction, regardless
+    of the values of the remaining features.
+\end{definition} 
+
+The paper distinguishes two types of minimality. A \emph{subset-minimal} AXp
+contains no unnecessary literal and is computed in a linear number of oracle calls:
+each literal is removed in turn and kept only if its removal breaks the implication.
+A \emph{cardinality-minimal} AXp is the shortest possible explanation, but its
+computation is $\Sigma_2^P$-hard and relies on an implicit hitting set enumeration.
+In practice, subset-minimal AXp's are preferred as they are significantly cheaper
+to compute while remaining close in size to cardinality-minimal ones.
+
+For neural networks with ReLU activations, the authors use a MILP encoding where
+Boolean variables $z_i \in \{0,1\}$ capture the activation state of each neuron via
+indicator constraints ($z_i = 1 \to y_i \leq 0$). Experiments on UCI datasets and
+MNIST show that subset-minimal AXp's reduce instance size to 28--87\% of the
+original features on average, and that the MILP oracle consistently outperforms SMT
+solvers. Compared to BDD-based explanations for Bayesian classifiers
+\textcite{shih_symbolic_2018}, AXp's on neural networks yield significantly
+more concise explanations (3--5 literals vs. 9).
+
+The main limitation of AXp's is that they implicitly assume \emph{independence}
+between features. When dependencies exist (e.g.\ a pregnant person is necessarily a
+woman), AXp's can produce superfluous or redundant explanations, and their number
+can grow exponentially \cite{cooper_abductive_2024}.
+
+\subsection{CPI-Xp (Coverage-based Explanations)}
+
+\textcite{cooper_abductive_2024} address this limitation by introducing coverage-based explanations (CPI-xp). 
+The key notion is the \emph{coverage} of a partial assignment $E$, defined as the set of feasible
+instances it explains:
+    \begin{equation}
+        \mathrm{cov}(E) = \{x \in \mathbb{F}[\mathcal{C}] \mid E(x)\}
+    \end{equation}
+where $\mathbb{F}[\mathcal{C}]$ is the set of instances satisfying the constraints
+$\mathcal{C}$. An explanation $E'$ \emph{subsumes} $E$ if
+$\mathrm{cov}(E) \subseteq \mathrm{cov}(E')$, meaning $E'$ applies to at least as
+many instances as $E$.
+
+\begin{definition}[CPI-Xp]
+    A coverage-based PI-explanation (CPI-Xp)
+    of $\kappa(x)$ is a partial assignment $E$ such that: (i) $E(x)$, (ii)
+    $\forall y \in \mathbb{F}[\mathcal{C}],\; E(y) \Rightarrow \kappa(y) = \kappa(x)$,
+    and (iii) no other valid explanation $E'$ strictly subsumes $E$ in $\mathbb{F}[\mathcal{C}]$.
+\end{definition}
+
+By selecting only explanations of maximal coverage, CPI-Xp automatically discard
+redundant and superfluous ones. The authors further refine this notion: a
+\emph{minimal} mCPI-Xp is subset-minimal among CPI-Xp's, and a
+\emph{preferred} pCPI-Xp keeps only one representative among equivalent
+ones (same coverage). The pCPI-Xp is the only notion satisfying all seven desirable
+formal properties defined in the paper (success, non-triviality, irreducibility,
+coherence, consistency, independence, non-equivalence).
+
+However, computing CPI-XP over the full feature space is $\Pi_2^P$-complete, a
+higher complexity class than AXp's ($FP^{NP}$). To make the approach tractable for
+black-box classifiers, the authors propose \emph{dataset-based} versions
+(d-CPI-Xp) where coverage is computed over a sample $T \subseteq \mathbb{F}[\mathcal{C}]$
+only. This reduces complexity to polynomial time $O(m^2 n^2)$, but at the cost of
+explanations that are only valid for instances in $T$, losing the global coherence
+property.
+
+\subsection{Efficient and Rigorous Model-Agnostic Explanations}
+
+Logic-based XAI addresses the lack of rigor of sub-symbolic methods but has two major drawbacks, 
+the need to access the structure of the model and the scalability problems. The paper “Efficient and Rigorous 
+Model-Agnostic Explanations” \cite{marques-silva_efficient_2025} tries to solve both problems by combining both. 
+To do that it will get the sbAXp, the sample based abductive explanation, rigorously : 
+    \begin{equation}
+        \mathbb{S} \subseteq \mathbb{F},\space\forall(x \in \mathbb{S}) . \left( \bigwedge_{i \in \mathcal{X}} (x_i = v_i) \right) \rightarrow (\kappa(x) = \kappa(v))
+    \end{equation}
+This XAI uses weak contrastive explanation (sbWCXp) : 
+    \begin{equation}
+        \mathbb{S} \subseteq \mathbb{F},\space \exists(x \in \mathbb{S}) . \left( \bigwedge_{i \in \mathcal{F} \setminus \mathcal{X}} (x_i = v_i) \right) \wedge (\kappa(x) \neq \kappa(v))
+    \end{equation}
+which is a subset of features that suffice to change the prediction if their value is changed.
+
+A Contrastive Explanation (CXp) is a subset-minimal WCXp, whereas an AXp answers a “Why?” question, 
+a contrastive explanation answers a “Why not?” question. This XAI uses the duality of AXp and CXp explanations, 
+“In general, each abductive explanation is a minimal hitting set of the set of contrastive explanations, 
+and vice-versa" \cite{marques-silva_efficient_2025}, meaning, from sbCXp we can get the sbAXp.
+
+The algorithm to get from the subset of all sbWCXp from one sbAXp is quite simple: compare each sbWCXp 
+against all others and keep the ones with no subsets to get all sbCXps. 
+\textcite{cooper_abductive_2024} work proposed an algorithm to get an sbAXp from all sbCXps but 
+\textcite{marques-silva_efficient_2025} proposes an asymptotically more efficient solution, that runs 
+in $O(mn)$ time instead of $O(m^2n)$. 
+
+Finding one sbAXp can be done in polynomial time but finding one smallest sbAXp is much harder and 
+unlikely to be solved in polynomial time. Finding one smallest sbAXp can be done by encoding the 
+problem to propositional maximum satisfiability (MaxSAT). With this they are able to find one smallest sbAXp 
+in a similar time as finding one sbAXp.
+
+\subsection{Leveraging Argumentation for Generating Robust Sample-based Explanations}
+
+This sample-based XAI uses arguments \cite{amgoud_leveraging_2023}, which is a plausible sbAXp. 
+To get the final sbAXps, this XAI uses attacks: if two arguments contradict each other, then both 
+will be compared and only one(if any) will be kept, this is repeated until there is no contradiction.
+
+Each argument is composed of two parts, first the support, which the condition of the argument, 
+when does it apply, second is the conclusion, what class does the argument predict.
+A contradiction is when the union of each support is not null and the conclusion different. 
+All attacks are treated at the same time and depending on the selection function will give a 
+set of stable extensions. A stable extension is a set of arguments without contradiction. The 
+choosing of one of the stable extensions is done with an inference rule.
+
+There are multiple selection functions : Max which gives all possible stable extensions. Card which 
+only keep the ones with the highest number of arguments. $Incl_i$ et $ Card_i$ which give the ones 
+that cover the most instances in the datasets. And $Incl_c$ et $Card_c$ which give the ones that 
+cover the highest number of classes. 
+
+To choose between all stable extensions, there are two inference rules possible : the universal inference 
+that will only keep arguments that are in all selected stable extensions and the existential inference that 
+will give all arguments in selected stable extensions.
+\begin{itemize}
+    \item \textbf{Universal inference:} $\Sigma \vdash^{\forall} a$ iff $\forall \mathcal{E} \in \Sigma$, $a \in \mathcal{E}$.
+    \item \textbf{Existential inference:} $\Sigma \vdash^{\exists} a$ iff $\exists \mathcal{E} \in \Sigma$ such that $a \in \mathcal{E}$.
+\end{itemize}
+Where $\mathcal{E} $ is a stable extension, $a$ an argument and $\Sigma$ all selected stable extensions. 
+
+With this method both success, finding an sbAXp and cohérence, having an sbAXp with no contradiction is not guaranteed. Coherence is guaranteed with the universal inference rule while Coherence is often broken with the existential inference rule, thus prioritize universal inference. \\
