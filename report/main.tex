@@ -32,6 +32,7 @@
 \usepackage{caption}
 \usepackage{xcolor} % pour les couleurs
 \usepackage[linkbordercolor=white]{hyperref} % après avoir chargé xcolor
+\usepackage[noabbrev]{cleveref}
 \usepackage{systeme}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
@@ -43,6 +44,7 @@
 \usepackage{multirow}
 \usepackage{subcaption}
 \usepackage{makecell}
+\usepackage{csquotes}
 
 
 % \setcounter{secnumdepth}{-1} % Désactive le compteur des parties
@@ -61,6 +63,8 @@
 % \newcolumntype{C}{>{$\displaystyle}Sc<$}
 % \cellspacetoplimit=5pt
 % \cellspacebottomlimit=5pt
+
+\newcolumntype{C}{>{\centering\arraybackslash}X}
 
 
 % MATHS SHORTHANDS
@@ -258,18 +262,15 @@
 % Introduction 
 
 \justify
-\subsection{Introduction}
 
 % TODO: Fill-in this part
 
 % Sections inputs
 \input{sections/intro.tex}
+\input{sections/ASP_CXP.tex}
 \input{sections/SHAP_scores.tex}
 \input{sections/Anchors_LIME.tex}
-\input{sections/ASP_CXP.tex}
 \input{sections/conclusion.tex}
-
-\section{Conclusion}
 
 \printbibliography[title={References}]
 

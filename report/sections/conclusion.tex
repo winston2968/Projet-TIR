@@ -1,0 +1,52 @@
+
+\section{Conclusion}
+
+\cref{tab:comparaison_xai} shows a comparative table of all the previously mentioned methods for local explanation of feature importance of classifiers. In the model type column, \textit{Black box} means that the method can be used to explained decision of any model, independently of the layout. While most of the methods can be used on black box models, some are model-specific (they work on a specific type of models) which is restrictive but can have some benefits in other columns (in the complexity for instance). The algorithmic complexity of each method is expressed relative to the number of features of the model, and some may have appoximation algorithm that have a better complexity. Finally, the reliability may seem vague, but it's a way to rank the methods in terms of the trustability we can put in the explanations they provide.
+
+\begin{table}[ht]
+    \centering
+    \caption{Comparative analysis of XAI methods (Perturbation vs. Abductive approaches).}
+    \label{tab:comparaison_xai}
+    \vspace{0.3cm}
+    
+    \newcolumntype{L}{>{\RaggedRight\arraybackslash}X}
+    
+    \small
+    \begin{tabularx}{\textwidth}{@{} L C C C C C @{}}
+        \toprule
+        \textbf{Method} & \textbf{Model type} & \textbf{Complexity} & \textbf{Approx.} & \textbf{Reliability} \\
+        \midrule
+        
+        \textbf{LIME} & Black-box & Polynomial & & - \\
+        \addlinespace[2pt]
+        
+        \textbf{Anchors} & Black-box & Exponential & & + \\
+
+        \midrule
+        
+        \textbf{SHAP} & Black-box & Exponential & Polynomial & + \\
+        \addlinespace[2pt]
+
+        \textbf{SHAP with $v_a$} & Black-box & Exponential & Polynomial & ++ \\
+        \addlinespace[2pt]
+
+        \textbf{Eject} & Tree ensembles & Polynomial & & ++ \\
+        \addlinespace[2pt]
+
+        \textbf{CNN SHAP} & Convolutive Neural Networks & Exponential & Polynomial & + \\
+        \addlinespace[2pt]
+
+        \midrule
+        
+        \textbf{sbAXp} & Black-box & Polynomial & & \checkmark \\
+        \addlinespace[2pt]
+        
+        \textbf{Argument} & Black-box & Polynomial & & \checkmark \\
+        \addlinespace[2pt]
+        
+        \textbf{CPI-Xp} & Black-box & $\Pi^P_2$-complete & & \checkmark \\
+        
+        \bottomrule
+    \end{tabularx}
+\end{table}
+

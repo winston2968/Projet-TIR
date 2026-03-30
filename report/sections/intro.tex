@@ -1,3 +1,6 @@
+
+\subsection*{Introduction}
+
 For the last decades, Artificial Intelligence has become a powerful tool 
 for enterprises but also more personally, especially as home assistant. 
 The famous ones are Large Language Models such as ChatGPT, Gemini, and others 
@@ -35,44 +38,46 @@ guaranty of the produced explanation.
 Table \ref{tab:comparaison_xai} provides a preliminary comparison of these 
 approaches to guide the reader through the following sections.
 
-\begin{table}[ht]
-    \centering
-    \caption{Comparative analysis of XAI methods (Perturbation vs. Abductive approaches).}
-    \label{tab:comparaison_xai}
-    \vspace{0.3cm}
+% \begin{table}[ht]
+%     \centering
+%     \caption{Comparative analysis of XAI methods (Perturbation vs. Abductive approaches).}
+%     \label{tab:comparaison_xai}
+%     \vspace{0.3cm}
     
-    \newcolumntype{L}{>{\RaggedRight\arraybackslash}X}
+%     \newcolumntype{L}{>{\RaggedRight\arraybackslash}X}
     
-    \small
-    \begin{tabularx}{\textwidth}{@{} l c c c c L @{}}
-        \toprule
-        \textbf{Method} & \textbf{Complexity} & \textbf{Approx.} & \textbf{Reach} & \textbf{Reliability} & \textbf{Key Characteristics} \\
-        \midrule
+%     \small
+%     \begin{tabularx}{\textwidth}{@{} l c c c c L @{}}
+%         \toprule
+%         \textbf{Method} & \textbf{Complexity} & \textbf{Approx.} & \textbf{Reach} & \textbf{Reliability} & \textbf{Key Characteristics} \\
+%         \midrule
         
-        \textbf{LIME} & Polynomial & \checkmark & Local & Low & 
-        Uses a local linear surrogate. Fast but lacks formal guarantees and stability. \\
-        \addlinespace[2pt]
+%         \textbf{LIME} & Polynomial & \checkmark & Local & Low & 
+%         Uses a local linear surrogate. Fast but lacks formal guarantees and stability. \\
+%         \addlinespace[2pt]
         
-        \textbf{SHAP} & Exponential & \checkmark & Local & Medium & 
-        Game theory based (Shapley values). Computationally heavy for high-dimensional data. \\
-        \addlinespace[2pt]
+%         \textbf{SHAP} & Exponential & \checkmark & Local & Medium & 
+%         Game theory based (Shapley values). Computationally heavy for high-dimensional data. \\
+%         \addlinespace[2pt]
         
-        \textbf{Anchors} & Exponential & \checkmark & Local & Medium & 
-        IF-THEN rules as sufficient conditions. Combinatorial search space for large feature sets. \\
-        \midrule
+%         \textbf{Anchors} & Exponential & \checkmark & Local & Medium & 
+%         IF-THEN rules as sufficient conditions. Combinatorial search space for large feature sets. \\
+%         \midrule
         
-        \textbf{sbAXp} & Polynomial & \xmark & Local & \checkmark & 
-        Sample-based Abductive Explanations. Provides logical guarantees on a subset of samples. \\
-        \addlinespace[2pt]
+%         \textbf{sbAXp} & Polynomial & \xmark & Local & \checkmark & 
+%         Sample-based Abductive Explanations. Provides logical guarantees on a subset of samples. \\
+%         \addlinespace[2pt]
         
-        \textbf{Argument} & Polynomial & \xmark & Local & \checkmark & 
-        Uses argumentation theory to derive explanations from conflicting data points. \\
-        \addlinespace[2pt]
+%         \textbf{Argument} & Polynomial & \xmark & Local & \checkmark & 
+%         Uses argumentation theory to derive explanations from conflicting data points. \\
+%         \addlinespace[2pt]
         
-        \textbf{CPI-Xp} & $\Pi^P_2$-complete & \checkmark & Local & \checkmark & 
-        Focuses on coverage and irredundancy. Very high complexity for exact computation. \\
+%         \textbf{CPI-Xp} & $\Pi^P_2$-complete & \checkmark & Local & \checkmark & 
+%         Focuses on coverage and irredundancy. Very high complexity for exact computation. \\
         
-        \bottomrule
-    \end{tabularx}
-\end{table}
+%         \bottomrule
+%     \end{tabularx}
+% \end{table}
+
+
 

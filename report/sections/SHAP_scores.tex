@@ -11,8 +11,8 @@
 Some of the most widely used methods for local features importance explanation are based on the 
 Shapley values from game theory. These methods are so popular because they give a contribution score 
 for each feature in the decision that is easily understood by the user. This contribution score has a sign and a magnitude, 
-so that a positive score means that the features contributes positively to the decision and the opposite for 
-a negative score. This result in straightforward visualizations of local features importance, as displayed in \ref{fig:shap_titanic} that shows Shapley-based contribution scores of features for a prediction of a naive Bayes classification model on an instance of the famous Titanic dataset. The goal here is to predict if the person represented by $x$ would have been able to survive from the Titanic. The model predicted the class \textit{yes}, and the scores tell us that the main contribuing feature is the \textit{Sex}: because the person is a female, she has good chances to survive. We can also see that the $Class$ of the person works slightly against its survival, as well as the fact that its an $adult$.
+so that a positive score means that the feature contributes positively to the decision and the opposite for 
+a negative score. This results in straightforward visualizations of local features importance, as displayed in \cref{fig:shap_titanic} that shows Shapley-based contribution scores of features for a prediction of a naive Bayes classification model on an instance of the famous Titanic dataset. The goal here is to predict if the person represented by $x$ would have been able to survive from the Titanic. The model predicted the class \textit{yes}, and the scores tell us that the main contribuing feature is the \textit{Sex}: because the person is a female, she has good chances to survive. We can also see that the $Class$ of the person works slightly against its survival, as well as the fact that its an $adult$.
 
 \begin{figure}[h]
     \centering
