@@ -18,17 +18,14 @@ $(REPORT_DIR)/$(PDF_NAME).pdf: $(MAIN_FILE)
 		-output-directory=$(REPORT_DIR) $(MAIN_FILE)
 
 # Nettoyage des fichiers auxiliaires
-# On ajoute le dossier REPORT_DIR pour être sûr de tout supprimer
 clean:
-	find . -type f \( \
-		-name "*.aux" -o -name "*.log" -o -name "*.out" -o -name "*.toc" \
-		-o -name "*.lof" -o -name "*.lot" -o -name "*.bbl" -o -name "*.blg" \
-		-o -name "*.maf" -o -name "*.mtc*" -o -name "*.thm" -o -name "*.synctex.gz" \
-		-o -name "*.ptc*" -o -name "*.fls" -o -name "*.fdb_latexmk" \
-		-o -name "*.bcf" -o -name "*.run.xml" \
-	\) -delete
+	@echo "==> Nettoyage des fichiers temporaires..."
+	@rm -f *.aux *.log *.out *.toc *.lof *.lot *.bbl *.blg *.maf *.mtc* *.thm *.synctex.gz
+	@rm -f *.ptc* *.fls *.fdb_latexmk *.bcf *.run.xml *.run*.xml *.synctex*
+	@rm -f $(REPORT_DIR)/*.aux $(REPORT_DIR)/*.log $(REPORT_DIR)/*.out $(REPORT_DIR)/*.toc
+	@rm -f $(REPORT_DIR)/*.bcf $(REPORT_DIR)/*.run.xml $(REPORT_DIR)/*.fdb_latexmk $(REPORT_DIR)/*.fls
 
 # Nettoyage complet
 cleanall: clean
 	@echo "==> Suppression du PDF..."
-	@rm -f $(PDF_NAME).pdf
+	@rm -f $(REPORT_DIR)/$(PDF_NAME).pdf

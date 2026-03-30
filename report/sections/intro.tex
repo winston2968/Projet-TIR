@@ -1,0 +1,78 @@
+For the last decades, Artificial Intelligence has become a powerful tool 
+for enterprises but also more personally, especially as home assistant. 
+The famous ones are Large Language Models such as ChatGPT, Gemini, and others 
+because we can naturally chat with them.
+The other famous type of models are classifiers and are still very used 
+today. A classifier is a model (Random Forest, Neural Network, etc...) which 
+sort inputs into \emph{classes}. For example, we can train a classifier to 
+recognize cat images from dog ones or tumor scan from benign outgrowth scan.
+The natural question is then "How to trust the decisions of a classifier?"
+For non critic uses, we can simply test the model for several inputs 
+to see if the model is able to recognize cat from dogs. But in sensitive 
+domains, we may want to verify that the model effectively recognizes cat 
+instead of wool ball or cat tree in background. In this case, the model 
+could effectively make an error and class a tumor scan in the benign scan class and then 
+create a medical error. 
+
+When we use non-complex models such as little Random Forest, we can 
+verify each decision of the model during the inference process but for 
+more complex ones like Neural Networks with billions of neurons, the human
+eye cannot do the same. 
+That's why, researchers try to develop \emph{explanation methods} which aims 
+to provide a human comprehensible output about the black-box model decision process 
+for the user. The goal is to explain why the model took a certain decision 
+and to figure out the origin of the potential errors. 
+
+This document detailed the today used models and systems for classifier 
+explanation. We start by presenting the SHAP-Score one which assign an importance 
+value to each model inputs. This method is based on game theory. 
+Then, we develop perturbations methods with LIME and Anchor systems. 
+We present the theoretical aspects of these methods and their ameliorations. 
+Finally, a more theoretical section develops Abdductive Explanation methods. 
+This section tries to formalize a classifier's reasoning to provide a formal 
+guaranty of the produced explanation. 
+
+Table \ref{tab:comparaison_xai} provides a preliminary comparison of these 
+approaches to guide the reader through the following sections.
+
+\begin{table}[ht]
+    \centering
+    \caption{Comparative analysis of XAI methods (Perturbation vs. Abductive approaches).}
+    \label{tab:comparaison_xai}
+    \vspace{0.3cm}
+    
+    \newcolumntype{L}{>{\RaggedRight\arraybackslash}X}
+    
+    \small
+    \begin{tabularx}{\textwidth}{@{} l c c c c L @{}}
+        \toprule
+        \textbf{Method} & \textbf{Complexity} & \textbf{Approx.} & \textbf{Reach} & \textbf{Reliability} & \textbf{Key Characteristics} \\
+        \midrule
+        
+        \textbf{LIME} & Polynomial & \checkmark & Local & Low & 
+        Uses a local linear surrogate. Fast but lacks formal guarantees and stability. \\
+        \addlinespace[2pt]
+        
+        \textbf{SHAP} & Exponential & \checkmark & Local & Medium & 
+        Game theory based (Shapley values). Computationally heavy for high-dimensional data. \\
+        \addlinespace[2pt]
+        
+        \textbf{Anchors} & Exponential & \checkmark & Local & Medium & 
+        IF-THEN rules as sufficient conditions. Combinatorial search space for large feature sets. \\
+        \midrule
+        
+        \textbf{sbAXp} & Polynomial & \xmark & Local & \checkmark & 
+        Sample-based Abductive Explanations. Provides logical guarantees on a subset of samples. \\
+        \addlinespace[2pt]
+        
+        \textbf{Argument} & Polynomial & \xmark & Local & \checkmark & 
+        Uses argumentation theory to derive explanations from conflicting data points. \\
+        \addlinespace[2pt]
+        
+        \textbf{CPI-Xp} & $\Pi^P_2$-complete & \checkmark & Local & \checkmark & 
+        Focuses on coverage and irredundancy. Very high complexity for exact computation. \\
+        
+        \bottomrule
+    \end{tabularx}
+\end{table}
+

@@ -9,8 +9,9 @@
 \usepackage{amsfonts}
 \usepackage{systeme}
 \usepackage{amsmath}
-\usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{pifont}
 \usepackage{comment}
 \usepackage{multicol}
 \usepackage{lipsum} 
@@ -81,7 +82,8 @@
 % MOD NOTATION
 \usepackage[framemethod=TikZ]{mdframed}
 \usepackage{amsthm}
-\usepackage{amssymb}
+
+\newcommand{\xmark}{\ding{55}}
 
 % --- 1. Configuration des compteurs avec des noms uniques ---
 \theoremstyle{definition}
@@ -240,7 +242,7 @@
 \begin{center}
     {\scshape {TIR}} \par \vspace{0.5em}
     {\Large \textbf{SOTA: How to explain a classifier?} \par \vspace{0.5em}}
-    {\large Mastrorillo Noé, Tortosa Matthias, Pigeon Axel, Sinatti Antoine}
+    % {\large Mastrorillo Noé, Tortosa Matthias, Pigeon Axel, Sinatti Antoine}
 \end{center}
 
 \vspace{0.5cm}
@@ -261,10 +263,11 @@
 % TODO: Fill-in this part
 
 % Sections inputs
+\input{sections/intro.tex}
 \input{sections/SHAP_scores.tex}
 \input{sections/Anchors_LIME.tex}
 \input{sections/ASP_CXP.tex}
-\input{sections/Comparison.tex}
+\input{sections/conclusion.tex}
 
 \section{Conclusion}
 
