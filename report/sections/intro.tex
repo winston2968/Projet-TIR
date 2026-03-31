@@ -7,7 +7,7 @@ The famous ones are Large Language Models such as ChatGPT, Gemini, and others
 because we can naturally chat with them.
 The other famous type of models are classifiers and are still very used 
 today. A classifier is a model (Random Forest, Neural Network, etc...) which 
-sort inputs into \emph{classes}. For example, we can train a classifier to 
+sorts inputs into \emph{classes}. For example, we can train a classifier to 
 recognize cat images from dog ones or tumor scan from benign outgrowth scan.
 The natural question is then "How to trust the decisions of a classifier?"
 For non critic uses, we can simply test the model for several inputs 
@@ -18,7 +18,7 @@ could effectively make an error and class a tumor scan in the benign scan class 
 create a medical error. 
 
 When we use non-complex models such as little Random Forest, we can 
-verify each decision of the model during the inference process but for 
+verify each decision of the model during the inference process. But for 
 more complex ones like Neural Networks with billions of neurons, the human
 eye cannot do the same. 
 That's why, researchers try to develop \emph{explanation methods} which aims 
@@ -26,17 +26,20 @@ to provide a human comprehensible output about the black-box model decision proc
 for the user. The goal is to explain why the model took a certain decision 
 and to figure out the origin of the potential errors. 
 
-This document detailed the today used models and systems for classifier 
-explanation. We start by presenting the SHAP-Score one which assign an importance 
-value to each model inputs. This method is based on game theory. 
-Then, we develop perturbations methods with LIME and Anchor systems. 
-We present the theoretical aspects of these methods and their ameliorations. 
-Finally, a more theoretical section develops Abdductive Explanation methods. 
-This section tries to formalize a classifier's reasoning to provide a formal 
-guaranty of the produced explanation. 
+This document details the today used models and systems for classifier 
+explanation.
+% We start by presenting the SHAP-Score one which assign an importance 
+% value to each model inputs. This method is based on game theory. 
+% Then, we develop perturbations methods with LIME and Anchor systems. 
+% We present the theoretical aspects of these methods and their ameliorations. 
+% Finally, a more theoretical section develops Abdductive Explanation methods. 
+% This section tries to formalize a classifier's reasoning to provide a formal 
+% guaranty of the produced explanation. 
+We start by presenting a theoretical approach with Abductive Explanation methods. This section tries to formalize a classifier's reasoning to provide a formal  guaranty of the produced explanation. Then, we present methods based on Shapley values that assign an importance value to each input feature of a decision, based on game theory principles. Finally, we develop perturbation methods with LIME and Anchor systems. We present the theoretical aspects of these methods and
+their ameliorations.
 
-Table \ref{tab:comparaison_xai} provides a preliminary comparison of these 
-approaches to guide the reader through the following sections.
+% Table \ref{tab:comparaison_xai} provides a preliminary comparison of these 
+% approaches to guide the reader through the following sections.
 
 % \begin{table}[ht]
 %     \centering
