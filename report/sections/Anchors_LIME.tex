@@ -37,7 +37,8 @@ It provides a local explanation of a black-box model behavior
 $ f : \R^d \longrightarrow \R $ by training a simple explanation 
 model $g$ over perturbed samples. This method 
 is \emph{model-agnostic} because it doesn't depend on the black-box model 
-architecture. $f$ is considered as an oracle used to train $g$.
+architecture. $f$ is considered as an oracle used to train $g$. The resulting explanation is the 
+set of the weights of $g$ which give a local importance of each $f$ input features. 
 
 \begin{center}
     \begin{minipage}{0.51\textwidth}
