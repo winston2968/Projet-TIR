@@ -1,7 +1,9 @@
 
 \section{Conclusion}
 
-To conclude, Table \ref{tab:comparaison_xai} shows a comparative table of all the previously mentioned methods for local explanation of feature importance of classifiers. In the model type column, \textit{Black box} means that the method can be used to explained decision of any model, independently of the layout. While most of the methods can be used on black box models, some are model-specific (they work on a specific type of models) which is restrictive but can have some benefits in other columns (in the complexity for instance). The algorithmic complexity of each method is expressed relative to the number of features of the model, and some may have appoximation algorithm that have a better complexity. Finally, the reliability may seem vague, but it's a way to rank the methods in terms of the trustability we can put in the explanations they provide.
+We've presented three major families of local decision explainers for classifiers : logic-based methods with AXps and CXps, Shapley values-based methods with SHAP and its derivatives, and perturbation based methods with LIME and Anchor. The choice in the used method depends on what type of explanation is expected. Logic-based methods give sets of the most relevant features that made the decision and provide formal guarantees on the quality of the explanations. SHAP-based methods attribute a contribution score to each feature in a decision that is easily interpretable for non-expert users, but may be less reliable. Similarly, LIME gives the linear weight attributed to each feature in a local submodel around the decision, so that each weigth represent the importance of each feature in the decision. And finally, Anchor provides user-friendly IF-THEN rules to trace down the decision.
+
+Table \ref{tab:comparaison_xai} shows a comparison of all the previously mentioned methods for local explanation of classifier decisions. In the model type column, \textit{Black-box} means that the method can be used to explain the decisions of any model, regardless of the layout. While most of the methods can be used on black box models, some are model-specific (they work on a specific type of models) which is restrictive but can have some benefits in other columns (in the complexity for instance). The algorithmic complexity of each method is expressed relative to the number of features of the model, and some may have an appoximation algorithm that have a better complexity. Finally, the reliability may seem vague, but it's a way to rank the methods in terms of the trustability we can put in the explanations they provide.
 
 \begin{table}[ht]
     \centering
@@ -14,13 +16,18 @@ To conclude, Table \ref{tab:comparaison_xai} shows a comparative table of all th
     \small
     \begin{tabularx}{\textwidth}{@{} L C C C C C @{}}
         \toprule
+
         \textbf{Method} & \textbf{Model type} & \textbf{Complexity} & \textbf{Approx.} & \textbf{Reliability} \\
+
         \midrule
-        
-        \textbf{LIME} & Black-box & Polynomial & & - \\
+
+        \textbf{sbAXp} & Black-box & Polynomial & & + \\
         \addlinespace[2pt]
         
-        \textbf{Anchors} & Black-box & Exponential & & + \\
+        \textbf{Argument} & Black-box & Polynomial & & ++ \\
+        \addlinespace[2pt]
+        
+        \textbf{CPI-Xp} & Black-box & $\Pi^P_2$-complete & Polynomial & + \\
 
         \midrule
         
@@ -34,19 +41,16 @@ To conclude, Table \ref{tab:comparaison_xai} shows a comparative table of all th
         \addlinespace[2pt]
 
         \textbf{CNN SHAP} & Convolutive Neural Networks & Exponential & Polynomial & + \\
-        \addlinespace[2pt]
 
         \midrule
         
-        \textbf{sbAXp} & Black-box & Polynomial & & \checkmark \\
+        \textbf{LIME} & Black-box & Polynomial & & - \\
         \addlinespace[2pt]
         
-        \textbf{Argument} & Black-box & Polynomial & & \checkmark \\
-        \addlinespace[2pt]
-        
-        \textbf{CPI-Xp} & Black-box & $\Pi^P_2$-complete & & \checkmark \\
+        \textbf{Anchors} & Black-box & Exponential & & + \\
         
         \bottomrule
     \end{tabularx}
 \end{table}
 
+While a lot of work on explainable AI has been published in the past years, validating models still represents a great challenge. Lots of larger AI systems emerge regularly but few people actually give importance to the reliability of their systems, which is mandatory in safety-critical contexts. We hope that we were able to raise people's awarness on the interpretability of AI models with initial lines of inquiry, and that this domain will continue to grow.

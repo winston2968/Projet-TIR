@@ -1,8 +1,14 @@
 
 \section{Abductive Explanation methods}
 
-In this section, we present abductive explanation methods for classifiers. Unlike
-perturbation-based methods, abductive explanations provide \emph{formal guarantees}
+% In this section, we present abductive explanation methods for classifiers. Unlike
+% perturbation-based methods, abductive explanations provide \emph{formal guarantees}
+% on the quality of the produced explanations. We focus on two works: the
+% algorithmic approach of \textcite{ignatiev_abduction-based_2019}, which
+% introduces AXp's, and the theoretical extension of \textcite{cooper_abductive_2024}, 
+% which generalizes them to constrained settings via CXp's.
+
+In this section, we present abductive explanation methods for classifiers, that provide \emph{formal guarantees}
 on the quality of the produced explanations. We focus on two works: the
 algorithmic approach of \textcite{ignatiev_abduction-based_2019}, which
 introduces AXp's, and the theoretical extension of \textcite{cooper_abductive_2024}, 
@@ -69,9 +75,15 @@ many instances as $E$.
 
 \begin{definition}[CPI-Xp]
     A coverage-based PI-explanation (CPI-Xp)
-    of $\kappa(x)$ is a partial assignment $E$ such that: (i) $E(x)$, (ii)
-    $\forall y \in \mathbb{F}[\mathcal{C}],\; E(y) \Rightarrow \kappa(y) = \kappa(x)$,
-    and (iii) no other valid explanation $E'$ strictly subsumes $E$ in $\mathbb{F}[\mathcal{C}]$.
+    of $\kappa(x)$ is a partial assignment $E$ such that: 
+    \begin{enumerate}[label=(\roman*)]
+        \item $E(x)$
+        \item $\forall y \in \mathbb{F}[\mathcal{C}],\; E(y) \Rightarrow \kappa(y) = \kappa(x)$
+        \item no other valid explanation $E'$ strictly subsumes $E$ in $\mathbb{F}[\mathcal{C}]$
+    \end{enumerate}
+    % (i) $E(x)$, (ii)
+    % $\forall y \in \mathbb{F}[\mathcal{C}],\; E(y) \Rightarrow \kappa(y) = \kappa(x)$,
+    % and (iii) no other valid explanation $E'$ strictly subsumes $E$ in $\mathbb{F}[\mathcal{C}]$.
 \end{definition}
 
 By selecting only explanations of maximal coverage, CPI-Xp automatically discard
@@ -125,7 +137,7 @@ in a similar time as finding one sbAXp.
 
 This sample-based XAI uses arguments \cite{amgoud_leveraging_2023}, which is a plausible sbAXp. 
 To get the final sbAXps, this XAI uses attacks: if two arguments contradict each other, then both 
-will be compared and only one(if any) will be kept, this is repeated until there is no contradiction.
+will be compared and only one (if any) will be kept, this is repeated until there is no contradiction.
 
 Each argument is composed of two parts, first the support, which the condition of the argument, 
 when does it apply, second is the conclusion, what class does the argument predict.
