@@ -1,103 +1,46 @@
-\documentclass[a4paper]{article}
+\documentclass[runningheads]{llncs}
 
-% HEADER
-\usepackage[top=3cm, bottom=3cm, left=3.5cm, right=3.5cm]{geometry}
-
+% --- PACKAGES DE BASE ---
+\usepackage[T1]{fontenc}
 \usepackage[english]{babel}
-\usepackage[T1]{fontenc}
-\usepackage{ragged2e}
-\usepackage{amsfonts}
-\usepackage{systeme}
-\usepackage{amsmath}
-\usepackage{amsthm}
-\usepackage{amssymb}
-\usepackage{pifont}
-\usepackage{comment}
-\usepackage{multicol}
-\usepackage{lipsum} 
 \usepackage{graphicx}
-\usepackage{stmaryrd}
-\usepackage{systeme}
-\usepackage{colortbl}
-\usepackage{cellspace}
-\usepackage{stmaryrd}
-% \usepackage{ntheorem}
-\usepackage{lmodern}
-\usepackage{bbm}
-\usepackage{mathtools}
-\usepackage{tabularx}
-\usepackage{titlepic}
-\usepackage{fancyhdr}
-\usepackage{caption}
-\usepackage{caption}
-\usepackage{xcolor} % pour les couleurs
-\usepackage[linkbordercolor=white]{hyperref} % après avoir chargé xcolor
-\usepackage[noabbrev]{cleveref}
-\usepackage{systeme}
-\usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\usepackage{listings}
-\usepackage{tikz}
-\usepackage{xparse} % Nécessaire pour définir des environnements avec arguments optionnels
-\usepackage{booktabs}  % Pour des tableaux plus jolis
-\usepackage{float} % For image positionning
-\usepackage{multirow}
-\usepackage{subcaption}
-\usepackage{makecell}
-\usepackage{csquotes}
+\usepackage{xcolor}
+\usepackage{amsfonts, amsmath, amssymb, mathtools, stmaryrd, bbm, mathrsfs}
+\usepackage{booktabs, tabularx, multirow, makecell, colortbl}
+\usepackage{caption, subcaption}
+\usepackage{float}
 \usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage{ragged2e}
+\usepackage{pifont} % Pour \xmark (\ding{55})
 
+% --- GRAPH ET DIAGRAMMES ---
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{arrows}
 
-% \setcounter{secnumdepth}{-1} % Désactive le compteur des parties
+% --- CODE ET ALGORITHMES ---
+\usepackage{listings}
+\usepackage{fancyvrb}
 
-% PAGE SETTINGS
+% --- HYPERREF (à charger tardivement) ---
+\usepackage[linkbordercolor=white]{hyperref}
+\usepackage[noabbrev]{cleveref}
 
-% \justifying
-
-% \setlength{\columnseprule}{1pt}
-% \def\columnseprulecolor{\color{black}}
-
-% \newcolumntype{C}{>{$\displaystyle}Sc<$}
-% \cellspacetoplimit=5pt
-% \cellspacebottomlimit=5pt
-
-% \newcolumntype{C}{>{$\displaystyle}Sc<$}
-% \cellspacetoplimit=5pt
-% \cellspacebottomlimit=5pt
-
-\newcolumntype{C}{>{\centering\arraybackslash}X}
-
-
-% MATHS SHORTHANDS
-
-\newcommand{\C}{\mathbb{C}}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\Q}{\mathbb{Q}}
-\newcommand{\Z}{\mathbb{Z}}
-\newcommand{\N}{\mathbb{N}}
-\newcommand{\U}{\mathbb{U}}
-\newcommand{\K}{\mathbb{K}}
-\newcommand{\M}{\mathcal{M}}
-\newcommand{\B}{\mathcal{B}}
-
-\renewcommand{\epsilon}{\varepsilon}
-\renewcommand{\phi}{\varphi}
-\renewcommand{\rho}{\varrho}
-
-% MOD NOTATION
+% --- CONFIGURATION DES ENVIRO. THÉORIQUES (Style mdframed) ---
 \usepackage[framemethod=TikZ]{mdframed}
-\usepackage{amsthm}
+\usepackage{xparse}
 
-\newcommand{\xmark}{\ding{55}}
+% --- Définition des environnements --- 
+\let\definition\undefined
+\let\enddefinition\undefined
+\let\endtheorem\undefined
+\let\theorem\undefined
 
-% --- 1. Configuration des compteurs avec des noms uniques ---
-\theoremstyle{definition}
-\newtheorem{mydefcounting}{Définition}[section] % Nom unique pour éviter le conflit
+% Configuration des compteurs
+\newtheorem{mydefcounting}{Definition}[section]
 
-\theoremstyle{plain}
-\newtheorem{mytheocounting}[mydefcounting]{Théorème}
-
-% --- 2. Style visuel ---
+% Style mdframed
 \mdfdefinestyle{mystyle}{
     skipabove=1.2em,
     skipbelow=1.2em,
@@ -111,16 +54,14 @@
     linewidth=1.5pt
 }
 
-% --- 3. Environnements utilisateurs ---
+% Redéfinition des environnements
 \NewDocumentEnvironment{definition}{O{}}
 {
     \refstepcounter{mydefcounting}
     \begin{mdframed}[style=mystyle, linecolor=lightgray]
     \normalsize \textbf{\textsc{Definition \themydefcounting}} \textit{~#1} \par
 }
-{
-    \end{mdframed}
-}
+{\end{mdframed}}
 
 \NewDocumentEnvironment{theorem}{O{}}
 {
@@ -128,143 +69,85 @@
     \begin{mdframed}[style=mystyle, linecolor=black]
     \normalsize \textbf{\textsc{Theorem \themydefcounting}} \textit{~#1} \medskip \par
 }
-{
-    \end{mdframed}
-}
+{\end{mdframed}}
 
-% --- Style pour les remarques (discret, sans cadre) ---
-\newtheoremstyle{remarkstyle}
-    {0.5em}          % Espace au-dessus
-    {0.5em}          % Espace au-dessous
-    {\normalsize}         % Police du corps (légèrement plus petite)
-    {}               % Indentation
-    {\itshape}       % Police du titre (italique)
-    {.}              % Ponctuation après le titre
-    { .5em}          % Espace après le titre
-    {}               % Spécification du titre
+% --- RACCOURCIS MATHS --- 
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\xmark}{\ding{55}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\phi}{\varphi}
 
-\theoremstyle{remarkstyle}
-\newtheorem*{remark}{Remark}
-
-% OTHERS 
-
-% \newlength\tindent
-% \setlength{\tindent}{\parindent}
-% \setlength{\parindent}{0pt}
-% \renewcommand{\indent}{\hspace*{\tindent}}
-
-\usepackage{fancyvrb}
-\usepackage{tikz-cd} 
-\usepackage{amsmath}
-\usepackage{mathrsfs}  
-\usepackage{amssymb}
-\usepackage{tkz-graph}
-\usepackage{caption}
-\usepackage{multicol}
-\usepackage{listings} % Importation du package listings
-\usepackage{xcolor} % Pour ajouter de la couleur
-
-\setlength{\columnsep}{1cm} % Espace entre les colonnes
-
-% Définition du style de l'en-tête
-\pagestyle{fancy}
-\fancyhf{} % Nettoyer les en-têtes et pieds de page
-
-% Gauche : Nom de la section
-\fancyhead[L]{\nouppercase{\leftmark}}
-
-% Droite : Logo
-\fancyhead[R]{\includegraphics[width=2cm]{./figures/logo_UT.png}}
-
-% Ligne sous l'en-tête
-\renewcommand{\headrulewidth}{0.4pt}
-
-% Numéro de page centré en bas
-\fancyfoot[C]{\thepage}
-
-% Ligne au-dessus du pied de page (optionnel, mettre à 0pt pour supprimer)
-\renewcommand{\footrulewidth}{0pt}
-
-
-\setlength{\headheight}{1.5cm} % Ajuste la hauteur de l'en-tête
-
+% --- CONFIGURATION LISTINGS (Code) ---
 \definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
-
 \lstdefinestyle{mystyle}{
     backgroundcolor=\color{backcolour},   
     commentstyle=\color{codegreen},
-    keywordstyle=\color{magenta},
-    numberstyle=\tiny\color{codegray},
-    stringstyle=\color{codepurple},
     basicstyle=\ttfamily\footnotesize,
-    breakatwhitespace=false,         
     breaklines=true,                 
-    captionpos=b,                    
-    keepspaces=true,                 
-    numbers=left,                    
-    numbersep=5pt,                  
-    showspaces=false,                
-    showstringspaces=false,
-    showtabs=false,                  
-    tabsize=2
+    tabsize=2,
+    numbers=left,
+    numbersep=5pt
 }
+\lstset{style=mystyle}
 
-\lstset{
-    style=mystyle
-}
+% Définitions des types de colonnes pour tabularx
+\newcolumntype{L}{>{\RaggedRight\arraybackslash}X}
+\newcolumntype{C}{>{\Centering\arraybackslash}X}
 
-% ---- Bib ----- 
-\usepackage[backend=biber, style=numeric-comp, sorting=none]{biblatex} 
-
-% Biblio parameters
-\DeclareSourcemap{
-  \maps[datatype=bibtex]{
-    \map{
-      \step[fieldset=abstract, null]
-      \step[fieldset=note, null]
-      \step[fieldset=file, null]
-    }
-  }
-}
-
-\AtEveryBibitem{%
-  \clearfield{note}%
-}
-
+% --- BIBLIOGRAPHIE (Biblatex/Biber) ---
+\usepackage[backend=biber, style=numeric-comp, sorting=none]{biblatex}
 \addbibresource{references.bib}
 
+% On nettoie l'affichage biblio
+\AtEveryBibitem{\clearfield{note}\clearfield{abstract}\clearfield{file}}
 
+% --- INFOS DOCUMENT ---
+\title{Explaining a classifier's decisions}
+\titlerunning{Explaining classifier's decisions} % Version courte pour l'en-tête
+
+
+% \author{Noé Mastrorillo \and Matthias Tortosa \and Axel Pigeon \and Antoine Sinatti}
+% \authorrunning{N. Mastrorillo et al.} 
+
+% \institute{University of Toulouse, France \\
+% \email{\{noe.mastrorillo, matthias.tortosa, axel.pigeon, antoine.sinatti\}@univ-toulouse.fr}}
+
+% =============================================================================
 \begin{document}
 
-% ==================================================================================================================================
-% TITLE 
+\maketitle              
 
-% \input{titlepage_report.tex}
+\begin{abstract}
+    As artificial intelligence and complex classifiers become increasingly prevalent in sensitive 
+    domains, the ability to understand and trust the decisions of these black-box models is essential. 
+    This document provides a comprehensive overview of current explainable AI (XAI) methods designed 
+    to interpret classifier outputs. The analysis categorizes these techniques into three primary 
+    families: logic-based abductive methods, game theory-based Shapley value approaches, and 
+    perturbation-based model-agnostic systems.
+    First, logic-based methods attempt to formalize the classifier's reasoning to offer formal 
+    guarantees on the quality and rigor of the produced explanations. Second, Shapley value 
+    methods evaluate feature importance by assigning a contribution score to each input based on 
+    game theory principles. While these scores are easily interpretable for users, computing them 
+    can be computationally intractable and heavily dependent on characteristic functions and reference 
+    distributions. Finally, perturbation methods observe model behavior by generating perturbed input 
+    samples. These methods provide local explanations either through linear approximations or 
+    user-friendly IF-THEN rules. Ultimately, the document concludes that the choice of an explanation 
+    method depends on the desired balance between formal reliability, computational complexity, and 
+    user interpretability.
+    \keywords{Explainable AI \and Classifiers \and Black-box models \and Feature Importance}
+\end{abstract}
 
-\begin{center}
-    {\scshape {TIR}} \par \vspace{0.5em}
-    {\LARGE \textbf{Explaining a classifier's decisions} \par \vspace{0.5em}}
-    % {\large Mastrorillo Noé, Tortosa Matthias, Pigeon Axel, Sinatti Antoine}
-\end{center}
-
-\vspace{0.5cm}
-
-% \begin{abstract}
-%     % TODO: Fill-in this part
-%     Abstract here
-% \end{abstract}
-
+\setcounter{tocdepth}{2} % Limite aux sous-sections pour gagner de la place
 \tableofcontents
-
-% ==================================================================================================================================
-% Introduction 
 
 \justify
 
-% Sections inputs
+% --- SECTIONS ---
 \input{sections/intro.tex}
 \input{sections/ASP_CXP.tex}
 \input{sections/SHAP_scores.tex}
