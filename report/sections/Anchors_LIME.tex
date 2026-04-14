@@ -205,7 +205,7 @@ the number of global explanation we wanted.
 
 
 Secondly, \textcite{ribeiro_nothing_2016} presents the evolution of LIME system by adding Anchors to clearly define LIME coverage boundaries. Indeed, by construction LIME perturbs the output representation $x'$ of a black-box model $f$ by selecting random $x'$ components according to a distribution $\pi_x$. However, this $ \pi_x$ doesn't define a clear zone around $x'$ where the system select the perturbed inputs to give to the models, ones can be very close and the other very far. So that human cannot really understand which feature is more important than another. 
-That's why, aLIME is an IF-THEN rules-based system that "anchors" a prediction features such that changing the others don't change de black-box model output. By this approach, precision (defined as how accurate humans are in those predictions) is needed but a too large set of rules only specific to a single instance is not useful for model understandability. Then the combinatorial aLIME problem if to find the shortest Anchor with high precision. 
+That's why, aLIME is an IF-THEN rules-based system that "anchors" a prediction features such that changing the others don't change the black-box model output. By this approach, precision (defined as how accurate humans are in those predictions) is needed but a too large set of rules only specific to a single instance is not useful for model understandability. Then the combinatorial aLIME problem if to find the shortest Anchor with high precision. 
 
 As presented in the previous section, SHAP-Scores in an intractable problem. 
 Fortunately, \textcite{arenas_tractability_2021} presents an efficient algorithm to compute 

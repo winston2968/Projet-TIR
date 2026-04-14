@@ -74,7 +74,7 @@ The Shapley value of a coalitional game $(\mF, v)$ is the only solution that res
 In ML, we treat each feature as a player, and the Shapley values allocate the predicted value of a specific instance fairly amongst all the features. 
 Thus, the Shapley values represent the contribution (positive or negative) of each feature in the decision to explain.
 
-Formally, let $x \in \mbF$ be the instance to explain where $\mbF = \mbF_1 \times \cdots \times \mbF_2$ is the input space 
+Formally, let $x \in \mbF$ be the instance to explain where $\mbF = \mbF_1 \times \cdots \times \mbF_n$ is the input space 
 of our model (each $\mbF_i$ is the space of the feature $i$), and $f(x)$ is the predicted value of our model 
 for a specific class. We consider the coalitional game represented 
 by $\mF = \{1, \dots, n \}$ the set of numbered features that will be our players, and the characteristic 

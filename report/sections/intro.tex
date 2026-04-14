@@ -2,7 +2,7 @@
 \subsection*{Introduction}
 
 For the last decades, Artificial Intelligence has become a powerful tool 
-for enterprises but also more personally, especially as home assistant. 
+for enterprises but also for personal use, especially as home assistant. 
 The famous ones are Large Language Models such as ChatGPT, Gemini, and others 
 because we can naturally chat with them.
 The other famous type of models are classifiers and are still very used 
@@ -11,15 +11,15 @@ sorts inputs into \emph{classes}. For example, we can train a classifier to
 recognize cat images from dog ones or tumor scan from benign outgrowth scan.
 The natural question is then "How to trust the decisions of a classifier?"
 For non critic uses, we can simply test the model for several inputs 
-to see if the model is able to recognize cat from dogs. But in sensitive 
-domains, we may want to verify that the model effectively recognizes cat 
-instead of wool ball or cat tree in background. In this case, the model 
+to see if the model is able to recognize cats from dogs. But in sensitive 
+domains, we may want to verify that the model effectively recognizes a cat 
+instead of a wool ball or a cat tree in background. In this case, the model 
 could effectively make an error and class a tumor scan in the benign scan class and then 
 create a medical error. 
 
 When we use non-complex models such as little Random Forest, we can 
 verify each decision of the model during the inference process. But for 
-more complex ones like Neural Networks with billions of neurons, the human
+more complex ones like Neural Networks with billions of parameters, the human
 eye cannot do the same. 
 That's why, researchers try to develop \emph{explanation methods} which aims 
 to provide a human comprehensible output about the black-box model decision process 
