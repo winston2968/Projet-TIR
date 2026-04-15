@@ -119,7 +119,7 @@ features preceding $i$ in random orderings $O_j$ of $\mF$: we define $\mS_j = Pr
 ehe reference instances $X$ are sampled following the chosen distribution.
 
 \begin{remark}
-    These two approximation solutions allow us to build confidence intervals over the computed Shapley values. 
+    These two solutions allow us to build confidence intervals over the approximated Shapley values, and we can control the approximation error from the exact Shapley values by varying the number of samples drawn (if we want a confidence interval closer to the exact value, we have to draw more samples).
     Each feature contribution can now be represented as an interval. This is particularly interesting because 
     this gives us more information whether an approximation of the contribution is relevant or not. If a Shapley 
     value is approximated to be close to zero, its confidence interval may take values from negatives to positives 
