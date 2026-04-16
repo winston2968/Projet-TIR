@@ -115,8 +115,7 @@ exploring the input space $\mbF$.
 
 Both issues are solved notably by \textcite{merrick_explanation_2020} by using sampling methods. 
 For the former, sub-coalitions $\mS \subset \mF\backslash\{i\}$ are sampled by taking all the 
-features preceding $i$ in random orderings $O_j$ of $\mF$: we define $\mS_j = Pre_i(O_j)$. For the latter, 
-ehe reference instances $X$ are sampled following the chosen distribution.
+features preceding $i$ in random orderings $O_j$ of $\mF$: we define $\mS_j = Pre_i(O_j)$. For the latter, the reference instances $X$ are sampled following the chosen distribution.
 
 \begin{remark}
     These two solutions allow us to build confidence intervals over the approximated Shapley values, and we can control the approximation error from the exact Shapley values by varying the number of samples drawn (if we want a confidence interval closer to the exact value, we have to draw more samples).
