@@ -7,7 +7,7 @@ or perturbed input tensor) at the input of the black-box model. The objective
 is to compare the model behavior (the prediction) between a set of different 
 perturbed inputs and the original one. Then, we can determine 
 which one is more important for the prediction. It allows the explanation model to 
-detail why the model took a specific decision. The following methods register in this 
+detail why the model took a specific decision. The following methods are of this 
 type. The first one, LIME (Local Interpretable Model-Agnostic Explanation) focus on a linear approximation 
 of local model behavior. Secondly, the Anchors method provides an amelioration of LIME by introducing the concept 
 of IF-THEN rules to provide a better user-experience. Finally, we will briefly talk about add-ons of those methods
@@ -77,7 +77,7 @@ is provided by the weights $w_g$ trained with $g(z') = w_g \cdot z'$.
 % Global interpretation 
 As stated at beginning, LIME provides a \emph{local} explanation of $f$. To ensure 
 a global explanation, the paper proposes a Sub-modular Picks LIME (SP-LIME) 
-which selects a set local and non-redundant LIME explanations to be given to the user \cite{ribeiro_why_2016}.
+which selects a set of local and non-redundant LIME explanations to be given to the user \cite{ribeiro_why_2016}.
 To choose those explanations, the paper introduces the concept of coverage of a set 
 of instances which defines the importance of those instances. 
 
@@ -159,7 +159,7 @@ Finally, the optimization problem can be described by :
     \max_{\mathbb{P} (prec(A) \geqslant \tau) \geqslant 1 - \delta} cov(A)
 \end{equation}
 
-Because the number of all possible Anchor is exponential, we can perform an 
+Because the number of all possible Anchor is exponential, we cannot perform an 
 exhaustive search. That's why the article introduced the Bottom-Up approach:
 \begin{enumerate}
     \item \emph{Initialization}: The anchor $A$ is initialized as an empty rule (applying to all instances).
@@ -204,8 +204,8 @@ explanations (weights). It differs from LIME where the user needed to define
 the number of global explanation we wanted.
 
 
-Secondly, \textcite{ribeiro_nothing_2016} presents the evolution of LIME system by adding Anchors to clearly define LIME coverage boundaries. Indeed, by construction LIME perturbs the output representation $x'$ of a black-box model $f$ by selecting random $x'$ components according to a distribution $\pi_x$. However, this $ \pi_x$ doesn't define a clear zone around $x'$ where the system select the perturbed inputs to give to the models, ones can be very close and the other very far. So that human cannot really understand which feature is more important than another. 
-That's why, aLIME is an IF-THEN rules-based system that "anchors" a prediction features such that changing the others don't change the black-box model output. By this approach, precision (defined as how accurate humans are in those predictions) is needed but a too large set of rules only specific to a single instance is not useful for model understandability. Then the combinatorial aLIME problem if to find the shortest Anchor with high precision. 
+Secondly, \textcite{ribeiro_nothing_2016} presents the evolution of LIME system by adding Anchors to clearly define LIME coverage boundaries. Indeed, by construction LIME perturbs the output representation $x'$ of a black-box model $f$ by selecting random $x'$ components according to a distribution $\pi_x$. However, this $ \pi_x$ doesn't define a clear zone around $x'$ where the system select the perturbed inputs to give to the models, some can be very close and the other very far. So that human cannot really understand which feature is more important than another. 
+That's why, aLIME is an IF-THEN rules-based system that "anchors" a prediction features such that changing the others don't change the black-box model output. By this approach, precision (defined as how accurate humans are in those predictions) is needed but a too large set of rules only specific to a single instance is not useful for model understandability. Then the combinatorial aLIME problem is to find the shortest Anchor with high precision. 
 
 As presented in the previous section, SHAP-Scores in an intractable problem. 
 Fortunately, \textcite{arenas_tractability_2021} presents an efficient algorithm to compute 
