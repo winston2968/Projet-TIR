@@ -105,7 +105,7 @@ Sed fringilla tempus hendrerit. Vestibulum ante ipsum primis in faucibus orci lu
 \end{abstract}
 
 %----------------------------------------------------------------------------------------
-%	INTRODUCTION
+%	INTRODUCTION (Colonne 1)
 %----------------------------------------------------------------------------------------
 
 \color{SaddleBrown} % SaddleBrown color for the introduction
@@ -113,11 +113,46 @@ Sed fringilla tempus hendrerit. Vestibulum ante ipsum primis in faucibus orci lu
 \section*{Introduction}
 
 %----------------------------------------------------------------------------------------
-%	SHAP 
+%	LOGIC-BASED ABDUCTIVE EXPLANATIONS (Colonne 2)
 %----------------------------------------------------------------------------------------
 
+\color{DarkSlateGray}
 
-\color{DarkSlateGray} % DarkSlateGray color for the rest of the content
+\section*{Logic-based Abductive Explanations}
+
+We consider a classifier $\kappa : F \to Cl$ where $F$ is the feature space and $Cl$ the set of classes. An instance $x \in F$ is described by a set of literals $(f_i, v)$. A partial assignment $E \subseteq x$ is a subset of literals of $x$, and $E(y)$ means that $y$ agrees with $E$ on all features it defines.
+
+% TODO: AXp section will be added here later
+
+\subsection*{CPI-Xp (Coverage-based Explanations)}
+
+Standard abductive explanations (AXp) implicitly assume \textbf{feature independence}. When dependencies exist (e.g.\ a pregnant person is necessarily a woman), AXp's can produce superfluous or redundant explanations, and their number can grow exponentially \cite{cooper_abductive_2024}.
+
+Cooper and Amgoud \cite{cooper_abductive_2024} address this by introducing \textbf{coverage-based explanations} (CPI-Xp). The key notion is the \textbf{coverage} of a partial assignment $E$:
+\begin{equation}
+    cov(E) = \{x \in F[\mathcal{C}] \mid E(x)\}
+\end{equation}
+where $F[\mathcal{C}]$ is the set of instances satisfying constraints $\mathcal{C}$. An explanation $E'$ \textbf{subsumes} $E$ if $cov(E) \subseteq cov(E')$.
+
+\vspace{0.5em}
+\textbf{Definition (CPI-Xp).} A coverage-based PI-explanation of $\kappa(x)$ is a partial assignment $E$ such that:
+\begin{enumerate}
+    \item $E(x)$
+    \item $\forall y \in F[\mathcal{C}],\; E(y) \Rightarrow \kappa(y) = \kappa(x)$
+    \item No other valid explanation $E'$ strictly subsumes $E$ in $F[\mathcal{C}]$
+\end{enumerate}
+
+By selecting explanations of \textbf{maximal coverage}, CPI-Xp automatically discards redundant ones. Two refinements exist:
+\begin{itemize}
+    \item \textbf{mCPI-Xp}: subset-minimal among CPI-Xp's.
+    \item \textbf{pCPI-Xp}: keeps only one representative among equivalent ones (same coverage). This is the only notion satisfying all seven desirable properties (success, non-triviality, irreducibility, coherence, consistency, independence, non-equivalence).
+\end{itemize}
+
+\textbf{Complexity:} Computing CPI-Xp over the full feature space is $\Pi_2^P$-complete. To achieve tractability, \textbf{dataset-based versions} (d-CPI-Xp) compute coverage over a sample $T \subseteq F[\mathcal{C}]$, reducing complexity to $O(m^2 n^2)$, at the cost of explanations only valid for instances in $T$.
+
+%----------------------------------------------------------------------------------------
+%	SHAP (Colonne 3)
+%----------------------------------------------------------------------------------------
 
 \section*{Shapley values based XAI}
 
@@ -158,7 +193,7 @@ The computation of exact Shapley values is intractable as it requires to explore
 
 
 %----------------------------------------------------------------------------------------
-%	CONCLUSIONS
+%	PERTURBATION METHODS (Colonne 4)
 %----------------------------------------------------------------------------------------
 
 \section*{Perturbation model-agnostic method}
@@ -206,41 +241,6 @@ the users \cite{ribeiro_anchors_2018}.
 \end{equation}
 with $ \mathcal{D}(x \mid A)$ the distribution of neighbors of $x$ wich satisfy the Anchor $A$. 
 
-% Formally, Anchors are built on a set of predicates $\{a_i\}$ called a "rules". We can 
-% also see it as a function of instances $x \in X$ :
-% $$ A : 
-%     \begin{cases}
-%         X \longrightarrow \{0, 1\} \\ 
-%         x \longmapsto 
-%         \begin{cases}
-%             1 \text{ if all rules are true for } x \\
-%             0 \text{ otherwise}
-%         \end{cases}
-%     \end{cases}
-% $$
-% to link a set of rules $A$ on a prediction $f(x)$ (where $f : X \longrightarrow Y$ 
-% is the black-box model). Finally, $A$ is an Anchor of $x$ if $A(x) = 1$ 
-% and $A$ is a sufficient condition for the prediction $y = f(x)$ :
-%     \begin{equation}
-%         \mathbb{E}_{\mathcal{D}(z \mid A)}[1_{f(x)=f(z)}] \geqslant \tau
-%     \end{equation}
-% with $\tau$ the desired level of precision of the Anchor on $x$ \cite{ribeiro_anchors_2018}.
-% Here, $ \mathcal{D}(x \mid A)$ represents the distribution of neighbors of $x$ 
-% which satisfy the Anchor $A$. 
-
-% Because the number of all possible Anchor is exponential, we cannot perform an 
-% exhaustive search. That's why the article introduced the Bottom-Up approach:
-% \begin{enumerate}
-%     \item \emph{Initialization}: The anchor $A$ is initialized as an empty rule (applying to all instances).
-%     \item \emph{Candidate Generation}: In each iteration, a set of candidate rules $\mathcal{A}$ is generated by extending $A$ with one additional feature predicate $\{a_i\}$: $\mathcal{A} = \{A \wedge a_i, A \wedge a_{i+1}, A \wedge a_{i+2}, ...\}$
-%     \item \emph{Selection via Multi-Armed Bandit (MAB)}: To identify the best 
-%     candidate without an exhaustive number of calls to $f$, the problem is 
-%     formulated as a pure-exploration multi-armed bandit problem. The \emph{KL-LUCB} 
-%     algorithm is used to find the rule with the highest precision using a minimal 
-%     set of samples \cite{ribeiro_anchors_2018}.
-%     \item \emph{Termination}: The process terminates when a rule meets the statistical precision constraint: $\mathbb{P} (prec(A) \geqslant \tau) \geqslant 1 - \delta$.
-% \end{enumerate}
-
 Computing Anchors is a combinatorial optimization problem. To handle the exponential search space, a 
 \textbf{Bottom-Up approach} is used:
 \begin{itemize}
@@ -268,27 +268,11 @@ Computing Anchors is a combinatorial optimization problem. To handle the exponen
 
 \color{DarkSlateGray} % Set the color back to DarkSlateGray for the rest of the content
 
-%----------------------------------------------------------------------------------------
-%	FORTHCOMING RESEARCH
-%----------------------------------------------------------------------------------------
-
-% \section*{Forthcoming Research}
-
-% Vivamus molestie, risus tempor vehicula mattis, libero arcu volutpat purus, sed blandit sem nibh eget turpis. Maecenas rutrum dui blandit lorem vulputate gravida. Praesent venenatis mi vel lorem tempor at varius diam sagittis. Nam eu leo id turpis interdum luctus a sed augue. Nam tellus.
-
  %----------------------------------------------------------------------------------------
 %	REFERENCES
 %----------------------------------------------------------------------------------------
 
 \printbibliography
-
-%----------------------------------------------------------------------------------------
-%	ACKNOWLEDGEMENTS
-%----------------------------------------------------------------------------------------
-
-% \section*{Acknowledgements}
-
-% Etiam fermentum, arcu ut gravida fringilla, dolor arcu laoreet justo, ut imperdiet urna arcu a arcu. Donec nec ante a dui tempus consectetur. Cras nisi turpis, dapibus sit amet mattis sed, laoreet.
 
 %----------------------------------------------------------------------------------------
 
