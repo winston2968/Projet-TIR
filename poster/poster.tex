@@ -168,28 +168,47 @@ The preferred variant \textbf{pCPI-Xp} keeps one representative per coverage cla
     
 \end{itemize}
 
-\subsection*{Efficient and Rigorous Model-Agnostic Explanations}
+\subsection*{Efficient and Rigorous Model-Agnostic Explanations (sbAXp)}
 
-Logic-based XAI addresses the lack of rigor of sub-symbolic methods but has two major drawbacks, the need to 
-access the structure of the model and the scalability problems. With efficient and rigorous model-agnostic 
-explanations both problems can be solved. To do that, this model will search  the sample based abductive explanation (sbAXp).
-To find the sbAXp, this model uses weak contrastive explanation (sbWCXp), which is a subset of features that suffice to change the prediction if their value is changed.
+Classic logic-based XAI requires access to the model's internal structure and suffers from scalability issues. This method solves both by working \textbf{sample-based}: it only queries the model as a black-box on a finite sample $S \subseteq F$, producing \textbf{sample-based abductive explanations} (sbAXp).
 
-A Contrastive Explanation (CXp) is a subset-minimal WCXp,whereas an AXp answers a "Why?" question, a contrastive 
-explanation answers a "Why not?" question. This XAI uses the duality of AXp and CXp explanations, meaning, from 
-sbCXp we can get the sbAXp.\\\\
-The algorithm to get from the subset of all sbWCXp from one sbAXp is quite simple: compare each sbWCXp against 
-all others and keep the ones with no subsets to get all sbCXps. Finding one sbAXp can be done in polynomial time but 
-finding one smallest sbAXp is much harder and unlikely to be solved in polynomial time, but can be done with a MaxSAT solver.
+\vspace{0.3em}
+\textbf{Principle.} The method exploits the \textbf{duality between AXp and CXp}: an AXp answers ``Why this prediction?'' while a Contrastive Explanation (CXp) answers ``Why not another?''. A CXp is a minimal subset of features that, if changed, suffices to alter the prediction. From all sbCXp's, the sbAXp's can be recovered via \textbf{minimal hitting sets}, and vice-versa.
 
-\subsection*{Leveraging Argumentation for Generating Robust Sample-based Explanations}
+\vspace{0.3em}
+\textbf{Definition.} A \textbf{sbAXp} is a subset $X \subseteq F$ such that:
+$$\forall x \in S,\; \Bigl(\bigwedge_{i \in X} (x_i = v_i)\Bigr) \Rightarrow \kappa(x) = \kappa(v)$$
+A \textbf{sbCXp} is a minimal subset $X$ such that $\exists x \in S$ agreeing with $v$ on $F \setminus X$ but $\kappa(x) \neq \kappa(v)$.
 
-This sample-based XAI uses arguments, which is a plausible sbAXp. To get the final sbAXps, this XAI uses attacks : if two arguments contradict each other, then both will be compared and only one(if any) will be kept, this is repeated until there is no contradiction.
+\vspace{0.5em}
+\textbf{Key characteristics:}
+\begin{itemize}
+    \item \textbf{Complexity:} \textbf{Polynomial} $O(mn)$ to find one sbAXp --- the most efficient among logic-based methods.
+    \item \textbf{Smallest sbAXp:} Finding the \textit{smallest} sbAXp is intractable in general, but solvable via a \textbf{MaxSAT} encoding in comparable time.
+    \item \textbf{vs.\ CPI-Xp:} Much cheaper ($O(mn)$ vs.\ $\Pi_2^P$-complete), but lacks the 7 formal properties and does not handle feature dependencies.
+    \item \textbf{vs.\ Argument-based:} Simpler algorithm (no argumentation framework needed), but does not filter contradictory explanations.
+\end{itemize}
 
-Each argument is composed of two parts, first the support, which the condition of the argument, when does it apply, second is the conclusion, what class does the argument predict.
-A contradiction is when the union of each support is not null and the conclusion different. All attacks are treated at the same time and depending on the selection function will give a set of stable extensions. A stable extension is a set of arguments without contradiction. The choosing of one of the stable extensions is done with an inference rule.\\
+\subsection*{Argumentation-based Explanations}
 
-With this XAI both success and coherence is not guaranteed. Coherence is only guaranteed with the universal inference rule, thus prioritize universal inference, keeping arguments that are in all selected stable extensions
+This method uses an \textbf{argumentation framework} to generate and refine sbAXp's. Instead of computing explanations directly, it builds \textbf{arguments} (plausible sbAXp's) and eliminates contradictions through \textbf{attacks}, producing more robust explanations.
+
+\vspace{0.3em}
+\textbf{Principle.} Each argument has a \textbf{support} (a set of feature conditions) and a \textbf{conclusion} (a predicted class). Two arguments \textbf{attack} each other when their supports are compatible but their conclusions differ. All attacks are resolved simultaneously via \textbf{stable extensions} (maximal conflict-free sets). A selection function (e.g.\ Max, Card, $Incl_i$, $Incl_c$) filters the extensions, and an \textbf{inference rule} selects the final explanations:
+\begin{itemize}
+    \item \textbf{Universal inference:} keeps only arguments present in \textit{all} selected extensions --- guarantees coherence.
+    \item \textbf{Existential inference:} keeps arguments present in \textit{any} selected extension --- more explanations but may break coherence.
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Key characteristics:}
+\begin{itemize}
+    \item \textbf{Complexity:} \textbf{Polynomial} --- comparable to sbAXp.
+    \item \textbf{Reliability:} ++ --- highest among logic-based methods, thanks to contradiction elimination.
+    \item \textbf{vs.\ sbAXp:} Same complexity but \textbf{filters out contradictory explanations}, producing more robust results.
+    \item \textbf{vs.\ CPI-Xp:} Much cheaper and more robust (++), but does not provide the full 7 formal properties and does not handle feature constraints.
+    \item \textbf{Trade-off:} Coherence is \textbf{only guaranteed with universal inference}; existential inference may produce contradictions.
+\end{itemize}
 
 %----------------------------------------------------------------------------------------
 %	SHAP (Colonne 3)
