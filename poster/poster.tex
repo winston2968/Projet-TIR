@@ -23,8 +23,11 @@
 \usepackage{multicol} % This is so we can have multiple columns of text side-by-side
 \columnsep=50pt % This is the amount of white space between the columns in the poster
 \columnseprule=3pt % This is the thickness of the black line between the columns in the poster
+\usepackage[margin=5cm]{geometry}
+\addtolength{\textwidth}{5cm} 
+\addtolength{\textheight}{5cm}
 
-\usepackage[svgnames]{xcolor} % Specify colors by their 'svgnames', for a full list of all colors available see here: http://www.latextemplates.com/svgnames-colors
+\usepackage[svgnames, table]{xcolor} % Specify colors by their 'svgnames', for a full list of all colors available see here: http://www.latextemplates.com/svgnames-colors
 
 \usepackage{times} % Use the times font
 %\usepackage{palatino} % Uncomment to use the Palatino font
@@ -64,8 +67,14 @@
   {\unspace}               % Nettoie les espaces à la fin
   {\textbf{[\printfield{labelnumber}]}~} % Affiche [1] suivi d'une espace insécable
 
+\defbibheading{custombib}[\refname]{%
+  \section*{\large #1}% Adjust \LARGE to your desired size
+}
+
 % Ajuster la ponctuation entre les entrées
 \renewcommand*{\finentrypunct}{\addperiod\quad}
+
+\renewcommand*{\bibfont}{\small}
 
 \begin{document}
 
@@ -124,9 +133,9 @@
 %	INTRODUCTION (Colonne 1)
 %----------------------------------------------------------------------------------------
 
-\color{SaddleBrown} % SaddleBrown color for the introduction
+% \color{SaddleBrown} % SaddleBrown color for the introduction
 
-\section*{Introduction}
+% \section*{Introduction}
 
 %----------------------------------------------------------------------------------------
 %	LOGIC-BASED ABDUCTIVE EXPLANATIONS (Colonne 2)
@@ -134,39 +143,69 @@
 
 \color{DarkSlateGray}
 
-\section*{Logic-based Abductive Explanations}
+\fontsize{28pt}{32pt}\selectfont
 
-We consider a classifier $\kappa : F \to Cl$ where $F$ is the feature space and $Cl$ the set of classes. An instance $x \in F$ is described by a set of literals $(f_i, v)$. A partial assignment $E \subseteq x$ is a subset of literals of $x$, and $E(y)$ means that $y$ agrees with $E$ on all features it defines.
+\color{Black}
 
-To define an Abductive explanation (AXp), we first need to define a weak AXp : Let $x \in F$ and $\kappa(x) = c$.
-A weak AXp of $\kappa(x)$ is a partial assignment $E \subseteq x$ such that:
-$$\forall y \in F,\; E(y) \Rightarrow \kappa(y) = \kappa(x)$$
-An AXp is a subset-minimal weak AXp. Intuitively, an AXp is the smallest set of
-feature values that is \textit{sufficient} to guarantee the prediction, regardless
-of the values of the remaining features.
-There is multiple methods to Find AXp, we will describe three of them here that work with blackbox model.
+\section{Logic-based Abductive Explanations}
 
-\subsection*{CPI-Xp (Coverage-based Explanations)}
+\color{DarkSlateGray}
 
-Standard AXp's assume \textbf{feature independence}. When dependencies exist between features (e.g.\ a pregnant person is necessarily a woman), AXp's produce \textbf{superfluous or redundant} explanations \cite{cooper_abductive_2024}. CPI-Xp solves this by incorporating \textbf{feature constraints} and selecting explanations with \textbf{maximal coverage}.
+% We consider a classifier $f : F \to Cl$ where $F$ is the feature space and $Cl$ the set of classes. An instance $x \in F$ is described by a set of literals $(f_i, v)$. A partial assignment $E \subseteq x$ is a subset of literals of $x$, and $E(y)$ means that $y$ agrees with $E$ on all features it defines.
 
-\vspace{0.3em}
-\textbf{Definition.} Let $F[\mathcal{C}]$ be the set of feasible instances under constraints $\mathcal{C}$, and $cov(E) = \{x \in F[\mathcal{C}] \mid E(x)\}$ the coverage of a partial assignment $E$.
-A \textbf{CPI-Xp} of $\kappa(x)$ is a partial assignment $E$ such that:
+% To define an Abductive explanation (AXp), we first need to define a weak AXp : Let $x \in F$ and $f(x) = c$.
+% A weak AXp of $f(x)$ is a partial assignment $E \subseteq x$ such that:
+% $$\forall y \in F,\; E(y) \Rightarrow f(y) = f(x)$$
+% An AXp is a subset-minimal weak AXp. Intuitively, an AXp is the smallest set of
+% feature values that is \textit{sufficient} to guarantee the prediction, regardless
+% of the values of the remaining features.
+% There is multiple methods to Find AXp, we will describe three of them here that work with blackbox model.
+
+Logic-based XAI use formal mathematics to prove the "why" behind each decision. In this part we will introduce the main branch of logic-based XAI that use AXp. \\
+
+A \textbf{weak Abductive Explanation} (wAXp) corresponds to a set of feature values that guarantee the prediction, regardless of the values of the remaining features. It is formalized as a partial assignment $E$ of an instance $x \in F$ such that : $\forall y \in F,\; E(y) \Rightarrow f(y) = f(x)$. Intuitively, an \textbf{Abductive Explanation} (AXp) is a subset minimal wAXp.
+
+The following example shows a very simple classifier for an input $x$ with two binary features $v1$ and $v2$: $f(x) = v1 \land v2$.
+
+\begin{center}
+    \begin{tabular}{|c|cc|c|}
+    \hline
+    & $v_1$ & $v_2$ & $f(x_i)$ \\
+    \hline
+    \rowcolor{red!15} % Ajustez le pourcentage (ex: red!20 ou pink!30) selon la nuance désirée
+    $x_1$ & $\mathit{0}$ & $\mathit{0}$ & $\mathit{0}$ \\
+    $x_2$ & $\mathit{0}$ & $\mathit{1}$ & $\mathit{1}$ \\
+    $x_3$ & $\mathit{1}$ & $\mathit{0}$ & $\mathit{1}$ \\
+    \rowcolor{red!15}
+    $x_4$ & $\mathit{1}$ & $\mathit{1}$ & $\mathit{1}$ \\
+    \hline
+    \end{tabular}
+\end{center}
+
+The decision $f(x_4)$ has three wAXp: $E_1 = \{(v_1, 1)\}$, $E_2 = \{(v_2, 1)\}$ and $E_3 = \{(v_1, 1), (v_2, 1)\}$ but only $E_3$ is a AXp. The decision $f(x_1)$ has one wAXp/AXP: $E_4 = \{(v_1, 0), (v_2, 0)\}$. \\
+
+
+In this section, we present three different methods to find AXps.
+
+\subsection*{Coverage-based Explanations}
+
+Standard AXp's assume \textbf{feature independence}. When dependencies exist between features (e.g.\ a pregnant person is necessarily a woman), AXp's produce superfluous or redundant explanations \cite{cooper_abductive_2024}. CPI-Xp solves this by incorporating \textbf{feature constraints} and selecting explanations with \textbf{maximal coverage}. \\
+
+Let $F[\mathcal{C}]$ be the set of feasible instances under constraints $\mathcal{C}$, and $cov(E) = \{x \in F[\mathcal{C}] \mid E(x)\}$ the coverage of a partial assignment $E$.
+A \textbf{CPI-Xp} of $f(x)$ is a partial assignment $E$ such that:
+
 \begin{enumerate}
     \item $E(x)$
-    \item $\forall y \in F[\mathcal{C}],\; E(y) \Rightarrow \kappa(y) = \kappa(x)$
+    \item $\forall y \in F[\mathcal{C}],\; E(y) \Rightarrow f(y) = f(x)$
     \item No valid explanation $E'$ strictly subsumes $E$ (i.e.\ $cov(E) \subsetneq cov(E')$)
 \end{enumerate}
 
-The preferred variant \textbf{pCPI-Xp} keeps one representative per coverage class and is the only notion satisfying all seven formal properties (success, non-triviality, irreducibility, coherence, consistency, independence, non-equivalence).
+\vspace{0.5cm}
 
-\vspace{0.5em}
-\textbf{Key characteristics:}
-\begin{itemize}
-    \item \textbf{Complexity:} $\Pi_2^P$-complete (exact), but a \textbf{polynomial approximation} exists via dataset-based versions (d-CPI-Xp) in $O(m^2 n^2)$.
+The preferred variant \textbf{pCPI-Xp} keeps one representative per coverage class and is the only notion satisfying all seven formal properties (success, non-triviality, irreducibility, coherence, consistency, independence, non-equivalence). \\
+
+\textbf{Complexity:} $\Pi_2^P$-complete (exact), but a \textbf{polynomial approximation} exists via dataset-based versions (d-CPI-Xp) in $O(m^2 n^2)$.
     
-\end{itemize}
 
 
 
@@ -174,30 +213,36 @@ The preferred variant \textbf{pCPI-Xp} keeps one representative per coverage cla
 
 Logic-based XAI addresses the lack of rigor of sub-symbolic methods but has two major drawbacks, the need to 
 access the structure of the model and the scalability problems. With efficient and rigorous model-agnostic 
-explanations both problems can be solved. To do that, this model will search  the sample based abductive explanation (sbAXp).
-To find the sbAXp, this model uses weak contrastive explanation (sbWCXp), which is a subset of features that suffice to change the prediction if their value is changed.
+explanations both problems can be solved. To do that, this model will search  the \textbf{sample based abductive explanation} (sbAXp).
+To find the sbAXp, this model uses \textbf{weak contrastive explanation} (sbWCXp), which is a subset of features that suffice to change the prediction if their value is changed.
 
 A Contrastive Explanation (CXp) is a subset-minimal WCXp,whereas an AXp answers a "Why?" question, a contrastive 
 explanation answers a "Why not?" question. This XAI uses the duality of AXp and CXp explanations, meaning, from 
 sbCXp we can get the sbAXp.\\\\
-The algorithm to get from the subset of all sbWCXp from one sbAXp is quite simple: compare each sbWCXp against 
+The algorithm to go from the subset of all sbWCXp to one sbAXp is quite simple: compare each sbWCXp against 
 all others and keep the ones with no subsets to get all sbCXps. Finding one sbAXp can be done in polynomial time but 
 finding one smallest sbAXp is much harder and unlikely to be solved in polynomial time, but can be done with a MaxSAT solver.
 
 \subsection*{Leveraging Argumentation for Generating Robust Sample-based Explanations}
 
-This sample-based XAI uses arguments, which is a plausible sbAXp. To get the final sbAXps, this XAI uses attacks : if two arguments contradict each other, then both will be compared and only one(if any) will be kept, this is repeated until there is no contradiction.
+This sample-based XAI uses \textbf{arguments}, which is a plausible sbAXp. To get the final sbAXps, this XAI uses attacks : if two arguments contradict each other, then both will be compared and only one (if any) will be kept, this is repeated until there is no contradiction. 
 
-Each argument is composed of two parts, first the support, which the condition of the argument, when does it apply, second is the conclusion, what class does the argument predict.
+Each argument is composed of two parts, first \textbf{the support}, which the condition of the argument, when does it apply, second is \textbf{the conclusion}, what class does the argument predict.
 A contradiction is when the union of each support is not null and the conclusion different. All attacks are treated at the same time and depending on the selection function will give a set of stable extensions. A stable extension is a set of arguments without contradiction. The choosing of one of the stable extensions is done with an inference rule.\\
 
 With this XAI both success and coherence is not guaranteed. Coherence is only guaranteed with the universal inference rule, thus prioritize universal inference, keeping arguments that are in all selected stable extensions
+
+\vfill\null
 
 %----------------------------------------------------------------------------------------
 %	SHAP (Colonne 3)
 %----------------------------------------------------------------------------------------
 
+\color{Black}
+
 \section{Shapley values based XAI}
+
+\color{DarkSlateGray}
 
 \newcommand{\mS}{\mathcal{S}}
 \newcommand{\mF}{\mathcal{F}}
@@ -214,18 +259,18 @@ players. \\
 Let $\mF = \{1, \dots, n\}$ be the set of the numbered features (the players). The Shapley value of a feature $i$ is computed by going through all the coalitions 
 not containing $i$ and looking at the \textbf{payoff difference} with and without the feature $i$ involved \cite{merrick_explanation_2020} :
 
-\begin{align}
+\begin{align*}
     \phi_i = \frac{1}{n} \sum_{\mS \in \mF\backslash\{i\}} \binom{n-1}{|\mS|}^{-1} & \bigl( \mbE[f(X) | X_{\mS\backslash\{i\}} = x_{\mS\backslash\{i\}}] \\
     & - \mbE[f(X) | X_{\mS}= x_{\mS}] \bigr)
-\end{align}
+\end{align*}
 
 From the efficiency axiom of Shapley values \cite{fryer_shapley_2021}, we get the following property that states that the sum of the importance is equal to the actual predicted value minus a reference contribution 
 that is the mean of all the predictions for the distribution on the input $X$
 
-\begin{align}
+\begin{align*}
     \sum_{i \in \mF} \phi_i(v) &= \mbE[f(X) | X_{\mF} = x_{\mF}] - \mbE[f(X) | X_{\emptyset} = x_{\emptyset}] \\
     &= f(x) - \mbE[f(X)]
-\end{align}
+\end{align*}
 
 Figure \ref{fig:shap-titanic} vizualises computed importance scores for the prediction of a naive Bayes 
 classifier on an instance of the Titanic dataset.
@@ -239,19 +284,26 @@ classifier on an instance of the Titanic dataset.
 
 \subsection*{Approximation}
 
-\textcite{strumbelj_efficient_2010} have shown that computing exact Shapley values become intractable when the number of features is large ($n \geq 100$). \textcite{merrick_explanation_2020} have come up with sampling methods to get an approximation in polynomial time:
+\textcite{strumbelj_efficient_2010} have shown that computing exact Shapley values become \textbf{intractable} when the number of features is large ($n \geq 100$). \textcite{merrick_explanation_2020} have come up with sampling methods to get an approximation in polynomial time:
 \begin{itemize}
     \item sub-coalitions are sampled by taking all the features preceiding $i$ in random orderings $O_j$ of 
 $\mF$: $\mS_j = Pre_i(O_j)$ ;
     \item the reference instances $X$ are sampled following the distribution of input instances.
-\end{itemize}  
+\end{itemize}
+
+% \vfill\null
 
 
 %----------------------------------------------------------------------------------------
 %	PERTURBATION METHODS (Colonne 4)
 %----------------------------------------------------------------------------------------
 
-\section*{Perturbation model-agnostic method}
+
+\color{Black}
+
+\section{Perturbation model-agnostic method}
+
+\color{DarkSlateGray}
 
 Perturbation methods identify which input features most significantly influence a 
 black-box model's decision process. These model-agnostic techniques compare the model's 
@@ -259,6 +311,7 @@ output for an original instance against its predictions for perturbed samples. B
 how these modifications affect the classification, we can quantify the importance of each 
 feature without accessing the model's internal architecture.
 
+\vspace{-0.5cm}
 \subsection*{LIME}
 
 LIME (Local Interpretable Model-Agnostic Explainer) generates local surrogates to approximate a 
@@ -274,14 +327,17 @@ to potential instability.
 
 \begin{center}
     \includegraphics[width=0.5\linewidth]{LIME_schema.png}
+    % \captionof{figure}{LIME linear local approximation. 
+    %     Black-box model $f$ classes is represented in blue/gray. The red 
+    %     cross represents an explained instance and the others 
+    %     symbols are the perturbation samples generated from the original. 
+    %     The dotted line represents the local approximation of $g$.}
     \captionof{figure}{LIME linear local approximation. 
-        Black-box model $f$ classes is represented in blue/gray. The red 
-        cross represents an explained instance and the others 
-        symbols are the perturbation samples generated from the original. 
-        The dotted line represents the local approximation of $g$.}
+        blue circles: $f$ classes. red cross: explaned instance. brown crosses: perturbation sample. dotted line: local approximation of $g$.}
     \label{fig:LIME_graph}
 \end{center}
 
+\vspace{-0.5cm}
 \subsection*{Anchors}
 
 Anchors were developed to solve the lack of clear boundaries provided by LIME. 
@@ -306,10 +362,14 @@ Computing Anchors is a combinatorial optimization problem. To handle the exponen
 %----------------------------------------------------------------------------------------
 %	REFERENCES
 %----------------------------------------------------------------------------------------
+\end{multicols}
 
-\printbibliography
+\vspace{-1cm}
+
+% \tiny
+\printbibliography[heading=custombib]
 
 %----------------------------------------------------------------------------------------
 
-\end{multicols}
+% \end{multicols}
 \end{document}

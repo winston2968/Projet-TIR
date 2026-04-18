@@ -1,0 +1,379 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{cooper_abductive_2024}{misc}{}{}
+      \name{author}{2}{}{%
+        {{hash=abed8c1150b8e704da3498f6c49deeb0}{%
+           family={Cooper},
+           familyi={C\bibinitperiod},
+           given={Martin},
+           giveni={M\bibinitperiod}}}%
+        {{hash=d83ae2cfb23cf7a6638380d4bbe0fd93}{%
+           family={Amgoud},
+           familyi={A\bibinitperiod},
+           given={Leila},
+           giveni={L\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {arXiv}%
+      }
+      \strng{namehash}{60b99a4604fae6f1974e3c04e8cfc57e}
+      \strng{fullhash}{60b99a4604fae6f1974e3c04e8cfc57e}
+      \strng{fullhashraw}{60b99a4604fae6f1974e3c04e8cfc57e}
+      \strng{bibnamehash}{2b33fda54d1e04c7feadd79dcb6920e8}
+      \strng{authorbibnamehash}{2b33fda54d1e04c7feadd79dcb6920e8}
+      \strng{authornamehash}{60b99a4604fae6f1974e3c04e8cfc57e}
+      \strng{authorfullhash}{60b99a4604fae6f1974e3c04e8cfc57e}
+      \strng{authorfullhashraw}{60b99a4604fae6f1974e3c04e8cfc57e}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Abductive explanations (AXp's) are widely used for understanding decisions of classifiers. Existing definitions are suitable when features are independent. However, we show that ignoring constraints when they exist between features may lead to an explosion in the number of redundant or superfluous AXp's. We propose three new types of explanations that take into account constraints and that can be generated from the whole feature space or from a sample (such as a dataset). They are based on a key notion of coverage of an explanation, the set of instances it explains. We show that coverage is powerful enough to discard redundant and superfluous AXp's. For each type, we analyse the complexity of finding an explanation and investigate its formal properties. The final result is a catalogue of different forms of AXp's with different complexities and different formal guarantees.}
+      \field{month}{9}
+      \field{note}{This paper focuses on abductive explanations (AXp), which aim to identify a minimal set of features that is sufficient to explain a classifier’s decision. The authors highlight that standard definitions of AXp usually assume that features are independent, which is rarely the case in real-world applications. In practice, there are often constraints between features, and ignoring them can lead to a large number of redundant, irrelevant, or misleading explanations. The paper distinguishes between two main types of constraints: integrity constraints (IC), which rule out impossible combinations of feature values (e.g., “a man cannot be pregnant”), and dependency constraints (DC), which express relationships between features (e.g., “if a person is pregnant, then they must be female”). While previous work may consider integrity constraints, dependency constraints are often ignored, which can result in an exponential number of explanations, many of which are redundant or unnecessary. To address this issue, the authors introduce a new approach based on the concept of coverage, defined as the set of instances that an explanation applies to. This notion allows explanations to be compared and filtered by keeping only the most relevant ones. Based on this idea, they propose three new types of explanations: CPI-Xp (coverage-based explanations), which prioritize explanations covering more instances mCPI-Xp (minimal explanations), which are also subset-minimal pCPI-Xp (preferred explanations), which remove equivalent explanations These new definitions help solve several key problems: they eliminate redundant explanations, significantly reduce their number (sometimes exponentially), and properly take into account dependencies between features. A major part of the paper is devoted to analyzing the computational complexity of these explanations. The authors show that checking or computing these new types of explanations is more computationally demanding than standard approaches (e.g., problems can be Π₂{\textasciicircum}P-complete), which raises challenges for practical use. To overcome this limitation, the authors propose a sample-based approach, where explanations are computed using a dataset instead of the entire feature space. This reduces the computational complexity to polynomial time, making the method more practical. However, this introduces a trade-off: explanations become easier to compute but are less reliable globally, since they are only valid for the observed data. Finally, the paper defines several desirable theoretical properties that explanation methods should satisfy, such as coherence, minimality, and independence. The authors show that their preferred explanations (pCPI-Xp) are the only ones that satisfy all these properties, making them theoretically robust. Overall, the main contribution of this paper is to provide a comprehensive framework for generating abductive explanations that are more relevant, less redundant, and adapted to real-world constraints, while also highlighting an important trade-off between explanation quality and computational cost. This work is particularly important in Explainable AI, as it shows that incorporating constraints is essential for producing meaningful and reliable explanations.}
+      \field{shorttitle}{Abductive explanations of classifiers under constraints}
+      \field{title}{Abductive explanations of classifiers under constraints: {Complexity} and properties}
+      \field{urlday}{17}
+      \field{urlmonth}{2}
+      \field{urlyear}{2026}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.48550/arXiv.2409.12154
+      \endverb
+      \verb{file}
+      \verb Preprint PDF:C\:\\Users\\Admin\\Zotero\\storage\\PRKX2Z3V\\Cooper and Amgoud - 2024 - Abductive explanations of classifiers under constr.pdf:application/pdf;Snapshot:C\:\\Users\\Admin\\Zotero\\storage\\QDUEFEI9\\Cooper and Amgoud - 2024 - Abductive explanations of classifiers under constr.html:text/html
+      \endverb
+      \verb{urlraw}
+      \verb http://arxiv.org/abs/2409.12154
+      \endverb
+      \verb{url}
+      \verb http://arxiv.org/abs/2409.12154
+      \endverb
+      \keyw{Matthias}
+    \endentry
+    \entry{merrick_explanation_2020}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=2d78ba2d47ae2a4db3e12b58cd268c1b}{%
+           family={Merrick},
+           familyi={M\bibinitperiod},
+           given={Luke},
+           giveni={L\bibinitperiod}}}%
+        {{hash=5f28201da8e96ae3f9aa7adc9226783c}{%
+           family={Taly},
+           familyi={T\bibinitperiod},
+           given={Ankur},
+           giveni={A\bibinitperiod}}}%
+      }
+      \name{editor}{4}{}{%
+        {{hash=3f4842b3f24d20f809775dbf780810ab}{%
+           family={Holzinger},
+           familyi={H\bibinitperiod},
+           given={Andreas},
+           giveni={A\bibinitperiod}}}%
+        {{hash=af9a5194722300b42ec7198efaa6d0d5}{%
+           family={Kieseberg},
+           familyi={K\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+        {{hash=8ff995904ba3ebeec1c38c62710b9873}{%
+           family={Tjoa},
+           familyi={T\bibinitperiod},
+           given={A\bibnamedelima Min},
+           giveni={A\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=de9f207a84b6996c69f6cba985d58933}{%
+           family={Weippl},
+           familyi={W\bibinitperiod},
+           given={Edgar},
+           giveni={E\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \list{location}{1}{%
+        {Cham}%
+      }
+      \list{publisher}{1}{%
+        {Springer International Publishing}%
+      }
+      \strng{namehash}{2a249b5866976e817519b29f26dc1847}
+      \strng{fullhash}{2a249b5866976e817519b29f26dc1847}
+      \strng{fullhashraw}{2a249b5866976e817519b29f26dc1847}
+      \strng{bibnamehash}{82742182206ceb8d0c1bf44976caa817}
+      \strng{authorbibnamehash}{82742182206ceb8d0c1bf44976caa817}
+      \strng{authornamehash}{2a249b5866976e817519b29f26dc1847}
+      \strng{authorfullhash}{2a249b5866976e817519b29f26dc1847}
+      \strng{authorfullhashraw}{2a249b5866976e817519b29f26dc1847}
+      \strng{editorbibnamehash}{24c8392c3e894cc00d04bfd3c472917e}
+      \strng{editornamehash}{24c8392c3e894cc00d04bfd3c472917e}
+      \strng{editorfullhash}{64004703dcb83ea0720698acd85649ae}
+      \strng{editorfullhashraw}{64004703dcb83ea0720698acd85649ae}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{A number of techniques have been proposed to explain a machine learning model’s prediction by attributing it to the corresponding input features. Popular among these are techniques that apply the Shapley value method from cooperative game theory. While existing papers focus on the axiomatic motivation of Shapley values, and efficient techniques for computing them, they offer little justification for the game formulations used, and do not address the uncertainty implicit in their methods’ outputs. For instance, the popular SHAP algorithm’s formulation may give substantial attributions to features that play no role in the model. In this work, we illustrate how subtle differences in the underlying game formulations of existing methods can cause large differences in the attributions for a prediction. We then present a general game formulation that unifies existing methods, and enables straightforward confidence intervals on their attributions. Furthermore, it allows us to interpret the attributions as contrastive explanations of an input relative to a distribution of reference inputs. We tie this idea to classic research in cognitive psychology on contrastive explanations, and propose a conceptual framework for generating and interpreting explanations for ML models, called formulate, approximate, explain (FAE). We apply this framework to explain black-box models trained on two UCI datasets and a Lending Club dataset.}
+      \field{booktitle}{Machine {Learning} and {Knowledge} {Extraction}}
+      \field{isbn}{978-3-030-57321-8}
+      \field{note}{This paper firstly introduce Shapley values formalism for computing explanations of single instances of models. Shapley values are computed by measuring the difference between the instance predictions in contrast of reference instances that are chosen to follow a specific distribution. The authors sustain that the choice of this reference distribution is very important and that the differences in feature attributions between every existing SHAP-based methods lies in this specific choice. It then explores the different already existing SHAP-based methods (TreeSHAP, KernelSHAP, QII), highlighting for each their related reference distribution. For instance, one can choose to sample reference instances from the distribution of the dataset, from the joint marginal distribution of all the features, or even from a uniform distribution over all the features space. The paper shows shortcomings in these existing methods, and propose a unified formulation for the Shapley value in order to build confidence intervals on the computed attributions to measure the uncertainty, regardless of the chosen reference distribution. Then, the paper proposes a framework when having recourse to SHAP scores, called Formulate - Approximate - Explain (FAE). One should firstly formulate a contrastive question related to the classification task to pin down the desired distribution of the references. Then, we approximate this distribution of the attribution vectors by sampling the chosen distribution. And finally, we summarize the obtained Shapley value, also presenting the confidence intervals. The paper apply this novel framework on several real-life examples (UCI Bike Sharing, Adult Income and Lending Club datasets using LightGBM and GBDT models). The results show the importance of the generated confidence intervals over the computed attributions, as well as the importance of the choice of the reference distribution in the contrastive process. It also proposes the use of clustering to identify sets of instances that may be interesting to contrast the explained instance with, and also sets that are not relevant for the explanation. Overall, this is a very clear paper that presents a well defined and very relevant method framework for improving the effectiveness of SHAP-based explanations. Every property put forward is demonstrated and the results are complete and relevant in regard of the problem.}
+      \field{shorttitle}{The {Explanation} {Game}}
+      \field{title}{The {Explanation} {Game}: {Explaining} {Machine} {Learning} {Models} {Using} {Shapley} {Values}}
+      \field{year}{2020}
+      \field{pages}{17\bibrangedash 38}
+      \range{pages}{22}
+      \verb{doi}
+      \verb 10.1007/978-3-030-57321-8_2
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Admin\\Zotero\\storage\\ZXIXWLS5\\Merrick et Taly - 2020 - The Explanation Game Explaining Machine Learning Models Using Shapley Values.pdf:application/pdf
+      \endverb
+      \keyw{Noé}
+    \endentry
+    \entry{fryer_shapley_2021}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=d985a9365ee7e318da66f00b8dc0e001}{%
+           family={Fryer},
+           familyi={F\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod}}}%
+        {{hash=5ee43a22d95b5417f89230db60069999}{%
+           family={Strümke},
+           familyi={S\bibinitperiod},
+           given={Inga},
+           giveni={I\bibinitperiod}}}%
+        {{hash=1fca003445f69ee14fb81497cdf9fa24}{%
+           family={Nguyen},
+           familyi={N\bibinitperiod},
+           given={Hien},
+           giveni={H\bibinitperiod}}}%
+      }
+      \strng{namehash}{66f6b38e95b5f009b306f996c8d9898c}
+      \strng{fullhash}{66f6b38e95b5f009b306f996c8d9898c}
+      \strng{fullhashraw}{66f6b38e95b5f009b306f996c8d9898c}
+      \strng{bibnamehash}{3061acedb1f4ef9f13c611f1a34dccf5}
+      \strng{authorbibnamehash}{3061acedb1f4ef9f13c611f1a34dccf5}
+      \strng{authornamehash}{66f6b38e95b5f009b306f996c8d9898c}
+      \strng{authorfullhash}{66f6b38e95b5f009b306f996c8d9898c}
+      \strng{authorfullhashraw}{66f6b38e95b5f009b306f996c8d9898c}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{The Shapley value has become popular in the Explainable AI (XAI) literature, thanks, to a large extent, to a solid theoretical foundation, including four “favourable and fair” axioms for attribution in transferable utility games. The Shapley value is probably the only solution concept satisfying these axioms. In this paper, we introduce the Shapley value and draw attention to its recent uses as a feature selection tool. We call into question this use of the Shapley value, using simple, abstract “toy” counterexamples to illustrate that the axioms may work against the goals of feature selection. From this, we develop a number of insights that are then investigated in concrete simulation settings, with a variety of Shapley value formulations, including SHapley Additive exPlanations (SHAP) and Shapley Additive Global importancE (SAGE). The aim is not to encourage any use of the Shapley value for feature selection, but we aim to clarify various limitations around their current use in the literature. In so doing, we hope to help demystify certain aspects of the Shapley value axioms that are viewed as “favourable”. In particular, we wish to highlight that the favourability of the axioms depends non-trivially on the way in which the Shapley value is appropriated in the XAI application.}
+      \field{issn}{2169-3536}
+      \field{journaltitle}{IEEE Access}
+      \field{note}{This paper summarizes the SHAP and SAGE feature explanation methods based on the Shapley values, while drawing attention on the fact that Shapley values are not inherently suited for feature selection and may in some cases fail in this domain. The relevance of such Shapley values for feature selection to a ML task lies in the game formulation and more precisely in the evaluation function. Then, the paper introduce the Shapley value formula, and the five interesting axioms that results : Efficiency, Null Player, Symmetry, Additivity, and Balanced Contributions. It also expresses the meanings of these axioms, highlighting the possible shortcomings for ML tasks when used with the wrong formulation. Notably, the authors argue that averaging across all submodels during the computation of the evaluation function can suffer from the presence of dominant feature, that theses axioms give poor performance of a feature on particularly small models, and that a feature acting as a secret holder will be ignore and assigned lower importance. To prove these, they experiment on very simple toy models on which they know the decision process, and that each highlight an issue when applying SHAP and SAGE methods. Even though this paper clearly put forward the failings of Shapley values for feature selection based on its axioms, it doesn’t suggest solutions to overcome these shortcomings, which makes it less interesting for our researches. Other papers have already shed light on Shapley values failings while proposing new methods more adapted to the problem of explanation of the feature importance. However, the authors conducted a very formal identification of the problems that are not only based on empirical studies, but more on the formal definition of the Shapley value itself, which is something we can surely acclaim.}
+      \field{shorttitle}{Shapley {Values} for {Feature} {Selection}}
+      \field{title}{Shapley {Values} for {Feature} {Selection}: {The} {Good}, the {Bad}, and the {Axioms}}
+      \field{urlday}{16}
+      \field{urlmonth}{2}
+      \field{urlyear}{2026}
+      \field{volume}{9}
+      \field{year}{2021}
+      \field{urldateera}{ce}
+      \field{pages}{144352\bibrangedash 144360}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.1109/ACCESS.2021.3119110
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:C\:\\Users\\Admin\\Zotero\\storage\\BDA9XXT3\\Fryer et al. - 2021 - Shapley Values for Feature Selection The Good, the Bad, and the Axioms.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://ieeexplore.ieee.org/abstract/document/9565902
+      \endverb
+      \verb{url}
+      \verb https://ieeexplore.ieee.org/abstract/document/9565902
+      \endverb
+      \keyw{Noé}
+    \endentry
+    \entry{strumbelj_efficient_2010}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=7f3dc0193e67a8d92c72175bf0815cd6}{%
+           family={Strumbelj},
+           familyi={S\bibinitperiod},
+           given={Erik},
+           giveni={E\bibinitperiod}}}%
+        {{hash=398d8e9b11dc3ac0d8be10cc7eda4e86}{%
+           family={Kononenko},
+           familyi={K\bibinitperiod},
+           given={Igor},
+           giveni={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{b67a832dd742fb97ba8b4a75f5d2e6c2}
+      \strng{fullhash}{b67a832dd742fb97ba8b4a75f5d2e6c2}
+      \strng{fullhashraw}{b67a832dd742fb97ba8b4a75f5d2e6c2}
+      \strng{bibnamehash}{5d8c278fb10ab8fa1657fde6235d29ac}
+      \strng{authorbibnamehash}{5d8c278fb10ab8fa1657fde6235d29ac}
+      \strng{authornamehash}{b67a832dd742fb97ba8b4a75f5d2e6c2}
+      \strng{authorfullhash}{b67a832dd742fb97ba8b4a75f5d2e6c2}
+      \strng{authorfullhashraw}{b67a832dd742fb97ba8b4a75f5d2e6c2}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{We present a general method for explaining individual predictions of classification models. The method is based on fundamental concepts from coalitional game theory and predictions are explained with contributions of individual feature values. We overcome the method's initial exponential time complexity with a sampling-based approximation. In the experimental part of the paper we use the developed method on models generated by several well-known machine learning algorithms on both synthetic and real-world data sets. The results demonstrate that the method is efficient and that the explanations are intuitive and useful.}
+      \field{issn}{1532-4435}
+      \field{journaltitle}{J. Mach. Learn. Res.}
+      \field{month}{3}
+      \field{note}{This paper describes a method to explain the contribution of individual features in the decisions of any classifier. While model-specific methods exists, having a general method for explaining any classifier’s decision is useful, especially for maintainability reasons and to reduce the dependence between the user and the model. Based on some game theory concepts clearly introduced in the preliminaries of the paper, the contribution function of the model features corresponds to the Shapley value of the coalitional game described by the model, delivering us useful axioms (for instance, the contributions of all the features sum up to the difference between the model’s actual and expected outputs). With this method, the contribution of a feature is computed from the predicted values of perturbations of the input over this feature. However, this method requires exploring the exponentially growing space of all subspaces of features, so computing the exact contributions on a model with a lot of features is not computationally possible. Thus, this paper describes an approximate formula for the Shapley values, and an algorithm to estimate of the contributions by drawing samples from the features space, giving the required number of samples to draw to respect a desired error restriction. The results part is very complete and shows the strength of this explanation method. We can only salute the comprehensiveness of the study. The described method is tested on several models (decision trees, random forests, SVM, neural networks, …) and several datasets, including synthetic ones but also real applications (like breast cancer recurrence), on a wide range of number of features. The study shows convergence of the error in the estimation of the features contribution, and the different running times for explanations, pointing that the method is not suitable when using a very large number of features (multiple hundreds). Finally, the paper presents visualizations of the features contributions for specific decisions on multiple datasets using different models, composed of the magnitude and sign of the contribution of each feature, showing how positively or negatively each feature affect the final decision. It demonstrate how the explanations can describe what the model did learn, possibly highlighting bad learning processes (over/underfitting, biases), and how we can compare different models using these explanations.}
+      \field{title}{An {Efficient} {Explanation} of {Individual} {Classifications} using {Game} {Theory}}
+      \field{urlday}{21}
+      \field{urlmonth}{2}
+      \field{urlyear}{2026}
+      \field{volume}{11}
+      \field{year}{2010}
+      \field{urldateera}{ce}
+      \field{pages}{1\bibrangedash 18}
+      \range{pages}{18}
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.5555/1756006.1756007
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.5555/1756006.1756007
+      \endverb
+      \keyw{Noé}
+    \endentry
+    \entry{ribeiro_why_2016}{inproceedings}{}{}
+      \name{author}{3}{}{%
+        {{hash=9203dc724f298030e81ba470feb309af}{%
+           family={Ribeiro},
+           familyi={R\bibinitperiod},
+           given={Marco\bibnamedelima Tulio},
+           giveni={M\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=0b9694812f0dc77974d99bb875a76d48}{%
+           family={Singh},
+           familyi={S\bibinitperiod},
+           given={Sameer},
+           giveni={S\bibinitperiod}}}%
+        {{hash=c9ab8ac486d7f85ac914b1a8e51e512b}{%
+           family={Guestrin},
+           familyi={G\bibinitperiod},
+           given={Carlos},
+           giveni={C\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \list{location}{1}{%
+        {San Francisco California USA}%
+      }
+      \list{publisher}{1}{%
+        {ACM}%
+      }
+      \strng{namehash}{70906198418f30a779bc9bda0f6ae1f1}
+      \strng{fullhash}{70906198418f30a779bc9bda0f6ae1f1}
+      \strng{fullhashraw}{70906198418f30a779bc9bda0f6ae1f1}
+      \strng{bibnamehash}{62dda78fe1497685b6e2c1e1adb1ed32}
+      \strng{authorbibnamehash}{62dda78fe1497685b6e2c1e1adb1ed32}
+      \strng{authornamehash}{70906198418f30a779bc9bda0f6ae1f1}
+      \strng{authorfullhash}{70906198418f30a779bc9bda0f6ae1f1}
+      \strng{authorfullhashraw}{70906198418f30a779bc9bda0f6ae1f1}
+      \field{extraname}{1}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{booktitle}{Proceedings of the 22nd {ACM} {SIGKDD} {International} {Conference} on {Knowledge} {Discovery} and {Data} {Mining}}
+      \field{isbn}{978-1-4503-4232-2}
+      \field{month}{8}
+      \field{note}{This article proposes a {\textbackslash}*{\textbackslash}*Local Interpretable Model Agnostic Explanations (LIME){\textbackslash}*{\textbackslash}* system for classification models. Its objective is to provide a local approximation of a black-box model behavior by an interpretable model (ex: random forest, linear model, etc...). The article also presents an amelioration of this method to provide a more global explanation of the model prediction by selecting local and non-redundant LIME explanations which faithfully represent the black-box model result called {\textbackslash}*{\textbackslash}*Sub-modular picks LIME (SP-LIME){\textbackslash}*{\textbackslash}*. LIME can be interpreted as a perturbation model. Indeed, from an original interpretable representation \$x'\$, it generates a set of samples \$z'\$ which are drawn by selecting uniformly some \$x'\$ non-zero components. This sampling is weighted by \$ {\textbackslash}pi\_x\$ which defines a locality around \$x'\$ denoted \${\textbackslash}mathcal\{Z\}\$. Then, the problem is to learn an explanation model \$g\$ such that \$g(z') = w\_g {\textbackslash}cdot z'\$ with \$w\_g\$ the importance of an interpretable feature of \$x\$. The paper also introduce a trade-of between the black-box model (\$f : {\textbackslash}mathbb\{R\}{\textasciicircum}d {\textbackslash}longrightarrow {\textbackslash}mathbb\{R\}\$) interpretation given by \$g\$ and the complexity of this explanation denoted \${\textbackslash}Omega(g)\$. Indeed, to explain a black-box model, we can simply return the model weights, but there are incomprehensible by a human. The LIME problem is then the minimization problem of how unfaithful \$g\$ is in approximating \$f\$ in locality around \$x\$ and having \${\textbackslash}Omega(g)\$ low enough to be human understandable. In practice, this optimization problem is intractable because \${\textbackslash}Omega(g)\$ specific choice function, that's why a K-LASSO resolution is used. The idea is to select the most \$K\$ relevant features by LASSO algorithm and then get the final weight \$w\_g\$ only for those features.}
+      \field{shorttitle}{"{Why} {Should} {I} {Trust} {You}?}
+      \field{title}{"{Why} {Should} {I} {Trust} {You}?": {Explaining} the {Predictions} of {Any} {Classifier}}
+      \field{urlday}{5}
+      \field{urlmonth}{2}
+      \field{urlyear}{2026}
+      \field{year}{2016}
+      \field{urldateera}{ce}
+      \field{pages}{1135\bibrangedash 1144}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1145/2939672.2939778
+      \endverb
+      \verb{file}
+      \verb Available Version (via Google Scholar):C\:\\Users\\Admin\\Zotero\\storage\\UGTPRETX\\Ribeiro et al. - 2016 - Why Should I Trust You Explaining the Predictions of Any Classifier.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/2939672.2939778
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/2939672.2939778
+      \endverb
+      \keyw{Axel}
+    \endentry
+    \entry{ribeiro_anchors_2018}{inproceedings}{}{}
+      \name{author}{3}{}{%
+        {{hash=9203dc724f298030e81ba470feb309af}{%
+           family={Ribeiro},
+           familyi={R\bibinitperiod},
+           given={Marco\bibnamedelima Tulio},
+           giveni={M\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=0b9694812f0dc77974d99bb875a76d48}{%
+           family={Singh},
+           familyi={S\bibinitperiod},
+           given={Sameer},
+           giveni={S\bibinitperiod}}}%
+        {{hash=c9ab8ac486d7f85ac914b1a8e51e512b}{%
+           family={Guestrin},
+           familyi={G\bibinitperiod},
+           given={Carlos},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{70906198418f30a779bc9bda0f6ae1f1}
+      \strng{fullhash}{70906198418f30a779bc9bda0f6ae1f1}
+      \strng{fullhashraw}{70906198418f30a779bc9bda0f6ae1f1}
+      \strng{bibnamehash}{62dda78fe1497685b6e2c1e1adb1ed32}
+      \strng{authorbibnamehash}{62dda78fe1497685b6e2c1e1adb1ed32}
+      \strng{authornamehash}{70906198418f30a779bc9bda0f6ae1f1}
+      \strng{authorfullhash}{70906198418f30a779bc9bda0f6ae1f1}
+      \strng{authorfullhashraw}{70906198418f30a779bc9bda0f6ae1f1}
+      \field{extraname}{2}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{booktitle}{Proceedings of the {AAAI} conference on artificial intelligence}
+      \field{note}{This article presents Anchor, a new explanation systme for complex neural networks. Compared to previous linearly weighted combinaison of the input features, Anchors can be interpreted as local sufficient condition for prediction. Anchors are build on a set of predicates \$A\$ called a "rules". We can also see it as a function of instances \$x {\textbackslash}in X\$ : \$\$A : {\textbackslash}begin\{cases\} X {\textbackslash}longrightarrow {\textbackslash}\{0, 1{\textbackslash}\} {\textbackslash}{\textbackslash} x {\textbackslash}longmapsto {\textbackslash}begin\{cases\} 1 {\textbackslash}text\{ if all rules are true for \} x {\textbackslash}{\textbackslash} 0 {\textbackslash}text\{ otherwise\} {\textbackslash}end\{cases\} {\textbackslash}end\{cases\} \$\$ To link an set of rules \$A\$ on a prediction \$f(x)\$ (where \$f : X {\textbackslash}longrightarrow Y\$ is the black-box model, we can finally define Anchors of \$x\$ iff \$A(x) = 1\$ and \$A\$ is a sufficient condition for the prediction \$y = f(x)\$ : \$\$	{\textbackslash}mathbb\{E\}\_\{{\textbackslash}mathcal\{D\}(z {\textbackslash}mid A)\}(1\_\{f(x)=f(z)\} {\textbackslash}geqslant {\textbackslash}tau\$\$ with \${\textbackslash}tau\$ the desired level of precision of the Anchor on \$x\$. Computing Anchors is the difficult part of the process. This is a combinatorial optimization problem if we decide to choose anchors whihch satisfy a precision constraint with high probability. \$\$	{\textbackslash}mathbb\{P\} (prec(A) {\textbackslash}geqslant {\textbackslash}tau) {\textbackslash}geqslant 1 - {\textbackslash}delta\$\$ with \$ prec(A) = {\textbackslash}mathbb\{E\}\_\{{\textbackslash}mathcal\{D\}(z {\textbackslash}mid A)\}(1\_\{f(x)=f(z)\}\$ called the anchors "precision". Among those anchors, we choose the largest coverage ones, where coverage is : \$\$cov(A) = {\textbackslash}mathbb\{E\}\_\{{\textbackslash}mathcal\{D\}(z)\} (A(z))\$\$ Finally, the optimisation problem can be describe by : \$\${\textbackslash}max\_\{{\textbackslash}mathbb\{P\} (prec(A) {\textbackslash}geqslant {\textbackslash}tau) {\textbackslash}geqslant 1 - {\textbackslash}delta\} cov(A)\$\$ Because the number of all possible anchor is exponential, we can perform an exhaustive search. That's why the article introduced the Bottom-Up approch: 1. **Initialization**: The anchor \$A\$ is initialized as an empty rule (applying to all instances). 2. **Candidate Generation**: In each iteration, a set of candidate rules \${\textbackslash}mathcal\{A\}\$ is generated by extending \$A\$ with one additional feature predicate \${\textbackslash}\{a\_i{\textbackslash}\}\$: \${\textbackslash}mathcal\{A\} = {\textbackslash}\{A {\textbackslash}wedge a\_i, A {\textbackslash}wedge a\_\{i+1\}, A {\textbackslash}wedge a\_\{i+2\}, ...{\textbackslash}\}\$ 3. **Selection via Multi-Armed Bandit (MAB)**: To identify the best candidate without an exhaustive number of calls to \$f\$, the problem is formulated as a pure-exploration multi-armed bandit problem. The **KL-LUCB** algorithm is used to find the rule with the highest precision using a minimal set of samples. 4. **Termination**: The process terminates when a rule meets the statistical precision constraint: \${\textbackslash}mathbb\{P\} (prec(A) {\textbackslash}geqslant {\textbackslash}tau) {\textbackslash}geqslant 1 - {\textbackslash}delta\$ To address the limitations of a purely greedy search, the algorithm extends the construction to a **Beam Search** of size \$B\$. - It maintains a set of \$B\$ current candidates instead of a single one. - Among the multiple anchors identified that satisfy the precision threshold \${\textbackslash}tau\$, the algorithm outputs the one with the highest coverage \$cov(A)\$, effectively optimizing the original problem. To provide a global understanding of the model, the article adapts a **Submodular Pick** (SP) procedure. The goal is to select a set of \$K\$ anchors that are non-redundant and cover as many instances in the validation set as possible.}
+      \field{number}{1}
+      \field{shorttitle}{Anchors}
+      \field{title}{Anchors: {High}-precision model-agnostic explanations}
+      \field{urlday}{5}
+      \field{urlmonth}{2}
+      \field{urlyear}{2026}
+      \field{volume}{32}
+      \field{year}{2018}
+      \field{urldateera}{ce}
+      \verb{file}
+      \verb Available Version (via Google Scholar):C\:\\Users\\Admin\\Zotero\\storage\\JHPWR8YT\\Ribeiro et al. - 2018 - Anchors High-precision model-agnostic explanations.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://ojs.aaai.org/index.php/aaai/article/view/11491
+      \endverb
+      \verb{url}
+      \verb https://ojs.aaai.org/index.php/aaai/article/view/11491
+      \endverb
+      \keyw{Axel}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
