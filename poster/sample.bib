@@ -84,3 +84,29 @@ In practice, this optimization problem is intractable because \${\textbackslash}
 	pages = {1135--1144},
 	file = {Available Version (via Google Scholar):C\:\\Users\\Admin\\Zotero\\storage\\UGTPRETX\\Ribeiro et al. - 2016 - Why Should I Trust You Explaining the Predictions of Any Classifier.pdf:application/pdf},
 }
+
+@misc{cooper_abductive_2024,
+	title = {Abductive explanations of classifiers under constraints: {Complexity} and properties},
+	shorttitle = {Abductive explanations of classifiers under constraints},
+	url = {http://arxiv.org/abs/2409.12154},
+	doi = {10.48550/arXiv.2409.12154},
+	abstract = {Abductive explanations (AXp's) are widely used for understanding decisions of classifiers. Existing definitions are suitable when features are independent. However, we show that ignoring constraints when they exist between features may lead to an explosion in the number of redundant or superfluous AXp's. We propose three new types of explanations that take into account constraints and that can be generated from the whole feature space or from a sample (such as a dataset). They are based on a key notion of coverage of an explanation, the set of instances it explains. We show that coverage is powerful enough to discard redundant and superfluous AXp's. For each type, we analyse the complexity of finding an explanation and investigate its formal properties. The final result is a catalogue of different forms of AXp's with different complexities and different formal guarantees.},
+	urldate = {2026-02-17},
+	publisher = {arXiv},
+	author = {Cooper, Martin and Amgoud, Leila},
+	month = sep,
+	year = {2024},
+	note = {This paper focuses on abductive explanations (AXp), which aim to identify a minimal set of features that is sufficient to explain a classifier’s decision. The authors highlight that standard definitions of AXp usually assume that features are independent, which is rarely the case in real-world applications. In practice, there are often constraints between features, and ignoring them can lead to a large number of redundant, irrelevant, or misleading explanations.
+The paper distinguishes between two main types of constraints: integrity constraints (IC), which rule out impossible combinations of feature values (e.g., “a man cannot be pregnant”), and dependency constraints (DC), which express relationships between features (e.g., “if a person is pregnant, then they must be female”). While previous work may consider integrity constraints, dependency constraints are often ignored, which can result in an exponential number of explanations, many of which are redundant or unnecessary.
+To address this issue, the authors introduce a new approach based on the concept of coverage, defined as the set of instances that an explanation applies to. This notion allows explanations to be compared and filtered by keeping only the most relevant ones. Based on this idea, they propose three new types of explanations:
+CPI-Xp (coverage-based explanations), which prioritize explanations covering more instances
+mCPI-Xp (minimal explanations), which are also subset-minimal
+pCPI-Xp (preferred explanations), which remove equivalent explanations
+These new definitions help solve several key problems: they eliminate redundant explanations, significantly reduce their number (sometimes exponentially), and properly take into account dependencies between features.
+A major part of the paper is devoted to analyzing the computational complexity of these explanations. The authors show that checking or computing these new types of explanations is more computationally demanding than standard approaches (e.g., problems can be Π₂{\textasciicircum}P-complete), which raises challenges for practical use.
+To overcome this limitation, the authors propose a sample-based approach, where explanations are computed using a dataset instead of the entire feature space. This reduces the computational complexity to polynomial time, making the method more practical. However, this introduces a trade-off: explanations become easier to compute but are less reliable globally, since they are only valid for the observed data.
+Finally, the paper defines several desirable theoretical properties that explanation methods should satisfy, such as coherence, minimality, and independence. The authors show that their preferred explanations (pCPI-Xp) are the only ones that satisfy all these properties, making them theoretically robust.
+Overall, the main contribution of this paper is to provide a comprehensive framework for generating abductive explanations that are more relevant, less redundant, and adapted to real-world constraints, while also highlighting an important trade-off between explanation quality and computational cost. This work is particularly important in Explainable AI, as it shows that incorporating constraints is essential for producing meaningful and reliable explanations.},
+	keywords = {Matthias},
+	file = {Preprint PDF:C\:\\Users\\Admin\\Zotero\\storage\\PRKX2Z3V\\Cooper and Amgoud - 2024 - Abductive explanations of classifiers under constr.pdf:application/pdf;Snapshot:C\:\\Users\\Admin\\Zotero\\storage\\QDUEFEI9\\Cooper and Amgoud - 2024 - Abductive explanations of classifiers under constr.html:text/html},
+}

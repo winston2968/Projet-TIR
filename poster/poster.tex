@@ -68,7 +68,7 @@
 % The widths of these boxes can be easily edited to accommodate your content as you see fit
 
 \begin{minipage}[b]{0.55\linewidth}
-    \veryHuge \color{NavyBlue} \textbf{Explaining a classifier's decisions} \color{Black} \\ \vspace{1cm} % Title
+    \veryHuge \color{NavyBlue} \textbf{Explaining a classifier's decisions} \color{Black} \\ % \vspace{0.25cm} % Title
 
     \huge \textbf{Noé Mastrorillo \& Axel Pigeon \& Antoine Sinatti \& Matthias Tortosa} \\ % Author(s)
     \huge  University of Toulouse, France \\
@@ -83,7 +83,7 @@
 \end{minipage}
 %
 \begin{minipage}[b]{0.19\linewidth}
-    \includegraphics[width=12cm]{logo.png} % Logo or a photo of you, adjust its dimensions here
+    \includegraphics[width=8cm]{logo.png} % Logo or a photo of you, adjust its dimensions here
 \end{minipage}
 
 \vspace{1cm} % A bit of extra whitespace between the header and poster content
@@ -100,7 +100,16 @@
 
 \begin{abstract}
 
-Sed fringilla tempus hendrerit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam ut elit sit amet metus lobortis consequat sit amet in libero. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vel sem magna. Nunc at convallis urna. isus ante. Pellentesque condimentum dui. Etiam sagittis purus non tellus tempor volutpat. Donec et dui non massa tristique adipiscing. Quisque vestibulum eros eu. Phasellus imperdiet, tortor vitae congue bibendum, felis enim sagittis lorem, et volutpat ante orci sagittis mi. Morbi rutrum laoreet semper. Morbi accumsan enim nec tortor consectetur non commodo nisi sollicitudin. Proin sollicitudin. Pellentesque eget orci eros. Fusce ultricies, tellus et pellentesque fringilla, ante massa luctus libero, quis tristique purus urna nec nibh.
+    As complex classifiers become increasingly prevalent in sensitive domains, the ability to understand and 
+    trust the decisions of these black-box models is essential. 
+    This poster provides a comprehensive overview of current explainable AI (XAI) methods designed 
+    to interpret classifier outputs. 
+    First, logic-based methods attempt to formalize the classifier's reasoning to offer formal 
+    guarantees on the quality and rigor of the produced explanations. Second, Shapley value 
+    methods evaluate feature importance by assigning a contribution score to each input based on 
+    game theory principles. Finally, perturbation methods observe model behavior by generating 
+    perturbed input samples. These methods provide local explanations either through 
+    linear approximations or user-friendly IF-THEN rules. 
 
 \end{abstract}
 
@@ -133,15 +142,18 @@ There is multiple methods to Find AXp, we will describe three of them here.
 
 \subsection*{CPI-Xp (Coverage-based Explanations)}
 
-Standard abductive explanations (AXp) implicitly assume \textbf{feature independence}. When dependencies exist (e.g.\ a pregnant person is necessarily a woman), AXp's can produce superfluous or redundant explanations, and their number can grow exponentially \cite{cooper_abductive_2024}.
+Standard abductive explanations (AXp) implicitly assume \textbf{feature independence}. When dependencies exist 
+(e.g.\ a pregnant person is necessarily a woman), AXp's can produce superfluous or redundant explanations, 
+and their number can grow exponentially \cite{cooper_abductive_2024}.
 
-Cooper and Amgoud \cite{cooper_abductive_2024} address this by introducing \textbf{coverage-based explanations} (CPI-Xp). The key notion is the \textbf{coverage} of a partial assignment $E$:
-\begin{equation}
-    cov(E) = \{x \in F[\mathcal{C}] \mid E(x)\}
-\end{equation}
-where $F[\mathcal{C}]$ is the set of instances satisfying constraints $\mathcal{C}$. An explanation $E'$ \textbf{subsumes} $E$ if $cov(E) \subseteq cov(E')$.
+Cooper and Amgoud \cite{cooper_abductive_2024} address this by introducing \textbf{coverage-based explanations} (CPI-Xp). 
+The key notion is the \textbf{coverage} of a partial assignment $E$:
+    \begin{equation}
+        cov(E) = \{x \in F[\mathcal{C}] \mid E(x)\}
+    \end{equation}
+where $F[\mathcal{C}]$ is the set of instances satisfying constraints $\mathcal{C}$. An explanation 
+$E'$ \textbf{subsumes} $E$ if $cov(E) \subseteq cov(E')$.
 
-\vspace{0.5em}
 \textbf{Definition (CPI-Xp).} A coverage-based PI-explanation of $\kappa(x)$ is a partial assignment $E$ such that:
 \begin{enumerate}
     \item $E(x)$
@@ -152,18 +164,33 @@ where $F[\mathcal{C}]$ is the set of instances satisfying constraints $\mathcal{
 By selecting explanations of \textbf{maximal coverage}, CPI-Xp automatically discards redundant ones. Two refinements exist:
 \begin{itemize}
     \item \textbf{mCPI-Xp}: subset-minimal among CPI-Xp's.
-    \item \textbf{pCPI-Xp}: keeps only one representative among equivalent ones (same coverage). This is the only notion satisfying all seven desirable properties (success, non-triviality, irreducibility, coherence, consistency, independence, non-equivalence).
+    \item \textbf{pCPI-Xp}: keeps only one representative among equivalent ones (same coverage). 
+    This is the only notion satisfying all seven desirable properties (success, non-triviality, irreducibility, 
+    coherence, consistency, independence, non-equivalence).
 \end{itemize}
 
-\textbf{Complexity:} Computing CPI-Xp over the full feature space is $\Pi_2^P$-complete. To achieve tractability, \textbf{dataset-based versions} (d-CPI-Xp) compute coverage over a sample $T \subseteq F[\mathcal{C}]$, reducing complexity to $O(m^2 n^2)$, at the cost of explanations only valid for instances in $T$.
+\textbf{Complexity:} Computing CPI-Xp over the full feature space is $\Pi_2^P$-complete. To 
+achieve tractability, \textbf{dataset-based versions} (d-CPI-Xp) compute coverage over a sample 
+$T \subseteq F[\mathcal{C}]$, reducing complexity to $O(m^2 n^2)$, at the cost of explanations 
+only valid for instances in $T$.
 
 \subsection*{Efficient and Rigorous Model-Agnostic Explanations}
 
-Logic-based XAI addresses the lack of rigor of sub-symbolic methods but has two major drawbacks, the need to access the structure of the model and the scalability problems. With efficient and rigorous model-agnostic explanations both problems can be solved. To do that, this model will search  the sample based abductive explanation (sbAXp).
-To find the sbAXp, this model uses weak contrastive explanation (sbWCXp) : $$\mathbb{S} \subseteq \mathbb{F},\space \exists(x \in \mathbb{S}) . \left( \bigwedge_{i \in \mathcal{F} \setminus \mathcal{X}} (x_i = v_i) \right) \wedge (\kappa(x) \neq \kappa(v))$$which is a subset of features that suffice to change the prediction if their value is changed. \\\\
-A Contrastive Explanation (CXp) is a subset-minimal WCXp,whereas an AXp answers a “Why?” question, a contrastive explanation answers a “Why not?” question. This XAI uses the duality of AXp and CXp explanations, meaning, from sbCXp we can get the sbAXp.\\\\
-The algorithm to get from the subset of all sbWCXp from one sbAXp is quite simple: compare each sbWCXp against all others and keep the ones with no subsets to get all sbCXps. 
-Finding one sbAXp can be done in polynomial time but finding one smallest sbAXp is much harder and unlikely to be solved in polynomial time, but can be done with a MaxSAT solver.
+Logic-based XAI addresses the lack of rigor of sub-symbolic methods but has two major drawbacks, the need to 
+access the structure of the model and the scalability problems. With efficient and rigorous model-agnostic 
+explanations both problems can be solved. To do that, this model will search  the sample based abductive explanation (sbAXp).
+To find the sbAXp, this model uses weak contrastive explanation (sbWCXp) : 
+\begin{equation}
+    \mathbb{S} \subseteq \mathbb{F},\space \exists(x \in \mathbb{S}) . \left( \bigwedge_{i \in \mathcal{F} \setminus \mathcal{X}} (x_i = v_i) \right) \wedge (\kappa(x) \neq \kappa(v))
+\end{equation}
+which is a subset of features that suffice to change the prediction if their value is changed.
+
+A Contrastive Explanation (CXp) is a subset-minimal WCXp,whereas an AXp answers a “Why?” question, a contrastive 
+explanation answers a “Why not?” question. This XAI uses the duality of AXp and CXp explanations, meaning, from 
+sbCXp we can get the sbAXp.\\\\
+The algorithm to get from the subset of all sbWCXp from one sbAXp is quite simple: compare each sbWCXp against 
+all others and keep the ones with no subsets to get all sbCXps. Finding one sbAXp can be done in polynomial time but 
+finding one smallest sbAXp is much harder and unlikely to be solved in polynomial time, but can be done with a MaxSAT solver.
 
 \subsection*{Leveraging Argumentation for Generating Robust Sample-based Explanations}
 
@@ -175,6 +202,7 @@ There are multiple selection functions : Max which gives all possible stable ext
 To choose between all stable extensions, there are two inference rules possible : the universal inference that will only keep arguments that are in all selected stable extensions and the existential inference that will give all arguments in selected stable extensions.
 
 With this method both success, finding an sbAXp and cohérence, having an sbAXp with no contradiction is not guaranteed. Coherence is guaranteed with the universal inference rule while Coherence is often broken with the existential inference rule, thus prioritize universal inference. \\
+
 %----------------------------------------------------------------------------------------
 %	SHAP (Colonne 3)
 %----------------------------------------------------------------------------------------
@@ -188,33 +216,51 @@ With this method both success, finding an sbAXp and cohérence, having an sbAXp 
 \newcommand{\mbF}{\mathbb{F}}
 \newcommand{\mbE}{\mathbb{E}}
 
-In this section, we present local explanation methods based on the Shapley values concept from game theory that give an importance score to each feature in the prediction of a single instance. Shapley values provide a mathematically fair and unique method to attribute the payoff of a cooperative game to the players. Formally, we define the coalitional game $(\mF, v)$ composed of the set of the $n$ numbered features used in the prediction $\mF = \{1, \dots, n\}$ and the evaluation function $v(\mS) = \mbE[f(X) | X_{\mS} = x_{\mS}]$ for all sub-coalition $\mS \subset \mF$, where $f$ is the classification function representing our model and $x_\mS = y_\mS$ means that instances $x$ and $y$ share the same values for the features in $\mS$. The Shapley value for a feature $i \in \mF$ is defined as follows:
+In this section, we present local explanation methods based on the Shapley values concept from game theory 
+that give an importance score to each feature in the prediction of a single instance. Shapley values 
+provide a mathematically fair and unique method to attribute the payoff of a cooperative game to the 
+players. Formally, we define the coalitional game $(\mF, v)$ composed of the set of the $n$ numbered 
+features used in the prediction $\mF = \{1, \dots, n\}$ and the evaluation function 
+$v(\mS) = \mbE[f(X) | X_{\mS} = x_{\mS}]$ for all sub-coalition $\mS \subset \mF$, where $f$ is 
+the classification function representing our model and $x_\mS = y_\mS$ means that instances $x$ and 
+$y$ share the same values for the features in $\mS$. The Shapley value for a feature $i \in \mF$ is 
+defined as follows:
 
-\begin{equation}
-    \phi_i = \frac{1}{n} \sum_{\mS \in \mF\backslash\{i\}} \binom{n-1}{|\mS|}^{-1} \bigl( \mbE[f(X) | X_{\mS\backslash\{i\}} = x_{\mS\backslash\{i\}}] - \mbE[f(X) | X_{\mS} = x_{\mS}] \bigr)
-\end{equation}
+\begin{align}
+    \phi_i = \frac{1}{n} \sum_{\mS \in \mF\backslash\{i\}} \binom{n-1}{|\mS|}^{-1} & \bigl( \mbE[f(X) | X_{\mS\backslash\{i\}} = x_{\mS\backslash\{i\}}] \\
+    & - \mbE[f(X) | X_{\mS}= x_{\mS}] \bigr)
+\end{align}
 
-We see that the Shapley value of a feature $i$ is computed by going through all the coalitions not containing $i$ and looking at the payoff difference with and without the feature $i$ involved.
+We see that the Shapley value of a feature $i$ is computed by going through all the coalitions 
+not containing $i$ and looking at the payoff difference with and without the feature $i$ involved.
 
 From the efficiency axiom of the Shapley values, we get the following property:
 
-\begin{equation}
-    \sum_{i \in \mF} \phi_i(v) = \mbE[f(X) | X_{\mF} = x_{\mF}] - \mbE[f(X) | X_{\emptyset} = x_{\emptyset}] = f(x) - \mbE[f(X)]
-\end{equation}
+\begin{align}
+    \sum_{i \in \mF} \phi_i(v) &= \mbE[f(X) | X_{\mF} = x_{\mF}] - \mbE[f(X) | X_{\emptyset} = x_{\emptyset}] \\
+    &= f(x) - \mbE[f(X)]
+\end{align}
 
-Therefore, the sum of the importance is equal to the actual predicted value minus a reference contribution that is the mean of all the predictions for the distribution on the input $X$.
+Therefore, the sum of the importance is equal to the actual predicted value minus a reference contribution 
+that is the mean of all the predictions for the distribution on the input $X$.
 
-Figure \ref{fig:shap-titanic} vizualises computed importance scores for the prediction of a naive Bayes classifier on an instance of the Titanic dataset.
+Figure \ref{fig:shap-titanic} vizualises computed importance scores for the prediction of a naive Bayes 
+classifier on an instance of the Titanic dataset.
 
 \begin{center}
     \includegraphics[width=0.8\linewidth]{shap_titanic.png}
-    \captionof{figure}{Feature importance attributions computed with Shapley values for the decision of a naive Bayes model on an instance of the Titanic dataset}
+    \captionof{figure}{Feature importance attributions computed with Shapley values for the decision of a naive Bayes 
+    model on an instance of the Titanic dataset}
     \label{fig:shap-titanic}
 \end{center}
 
 \subsection*{Approximation}
 
-The computation of exact Shapley values is intractable as it requires to explore all the sub-coalitions which are in exponential number. Moreover, the computation of the evaluation function requires to explore all the input space. Previous work have come up with sampling methods to get an approximation in polynomial time. Sub-coalitions are sampled by taking all the features preceiding $i$ in random orderings $O_j$ of $\mF$: $\mS_j = Pre_i(O_j)$. The reference instances $X$ are sampled following the distribution of input instances.
+The computation of exact Shapley values is intractable as it requires to explore all the sub-coalitions which 
+are in exponential number. Moreover, the computation of the evaluation function requires to explore all 
+the input space. Previous work have come up with sampling methods to get an approximation in polynomial 
+time. Sub-coalitions are sampled by taking all the features preceiding $i$ in random orderings $O_j$ of 
+$\mF$: $\mS_j = Pre_i(O_j)$. The reference instances $X$ are sampled following the distribution of input instances.
 
 
 %----------------------------------------------------------------------------------------
@@ -244,7 +290,7 @@ A most global explanation of the black-box model can be provided by SP-LIME whic
 select a set of local and non-redundant LIME explanations. 
 
 \begin{center}
-    \includegraphics[width=0.8\linewidth]{LIME_schema.png}
+    \includegraphics[width=0.6\linewidth]{LIME_schema.png}
     \captionof{figure}{LIME linear local approximation. 
         Black-box model $f$ classes is represented in blue/gray. The red 
         cross represents an explained instance and the others 
