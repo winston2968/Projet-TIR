@@ -168,27 +168,7 @@ The preferred variant \textbf{pCPI-Xp} keeps one representative per coverage cla
     
 \end{itemize}
 
-\subsection*{CPI-Xp (Coverage-based Explanations)}
 
-Standard AXp's assume \textbf{feature independence}. When dependencies exist between features (e.g.\ a pregnant person is necessarily a woman), AXp's produce \textbf{superfluous or redundant} explanations \cite{cooper_abductive_2024}. CPI-Xp solves this by incorporating \textbf{feature constraints} and selecting explanations with \textbf{maximal coverage}.
-
-\vspace{0.3em}
-\textbf{Definition.} Let $F[\mathcal{C}]$ be the set of feasible instances under constraints $\mathcal{C}$, and $cov(E) = \{x \in F[\mathcal{C}] \mid E(x)\}$ the coverage of a partial assignment $E$.
-A \textbf{CPI-Xp} of $\kappa(x)$ is a partial assignment $E$ such that:
-\begin{enumerate}
-    \item $E(x)$
-    \item $\forall y \in F[\mathcal{C}],\; E(y) \Rightarrow \kappa(y) = \kappa(x)$
-    \item No valid explanation $E'$ strictly subsumes $E$ (i.e.\ $cov(E) \subsetneq cov(E')$)
-\end{enumerate}
-
-The preferred variant \textbf{pCPI-Xp} keeps one representative per coverage class and is the only notion satisfying all seven formal properties (success, non-triviality, irreducibility, coherence, consistency, independence, non-equivalence).
-
-\vspace{0.5em}
-\textbf{Key characteristics:}
-\begin{itemize}
-    \item \textbf{Complexity:} $\Pi_2^P$-complete (exact), but a \textbf{polynomial approximation} exists via dataset-based versions (d-CPI-Xp) in $O(m^2 n^2)$.
-    
-\end{itemize}
 
 \subsection*{Efficient and Rigorous Model-Agnostic Explanations}
 
