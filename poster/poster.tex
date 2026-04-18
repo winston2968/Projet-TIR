@@ -68,15 +68,16 @@
 % The widths of these boxes can be easily edited to accommodate your content as you see fit
 
 \begin{minipage}[b]{0.55\linewidth}
-    \veryHuge \color{NavyBlue} \textbf{Explaining a classifier's decisions} \color{Black} \\ % \vspace{0.25cm} % Title
+    \veryHuge \color{NavyBlue} \textbf{Explaining a classifier's decisions} \color{Black} \\ \vspace{-1cm} % Title
 
     \huge \textbf{Noé Mastrorillo \& Axel Pigeon \& Antoine Sinatti \& Matthias Tortosa} \\ % Author(s)
     \huge  University of Toulouse, France \\
 \end{minipage}
 %
 \begin{minipage}[b]{0.25\linewidth}
-    \color{DarkSlateGray}\Large \textbf{Contact Information:}\\
-    \texttt{noe.mastrorillo@utoulouse.fr}\\
+    \color{DarkSlateGray}\Large \textbf{Contact Information:}
+
+    \normalsize \texttt{noe.mastrorillo@utoulouse.fr}\\
     \texttt{axel.pigeon@utoulouse.fr}\\
     \texttt{antoine.sinatti@utoulouse.fr}\\
     \texttt{matthias.tortosa@utoulouse.fr}\\
@@ -86,7 +87,7 @@
     \includegraphics[width=8cm]{logo.png} % Logo or a photo of you, adjust its dimensions here
 \end{minipage}
 
-\vspace{1cm} % A bit of extra whitespace between the header and poster content
+% \vspace{1cm} % A bit of extra whitespace between the header and poster content
 
 %----------------------------------------------------------------------------------------
 
@@ -264,7 +265,7 @@ $\mF$: $\mS_j = Pre_i(O_j)$. The reference instances $X$ are sampled following t
 
 
 %----------------------------------------------------------------------------------------
-%	PERTURBATION METHODS (Colonne 4)
+%	PERTURBATION METHODS
 %----------------------------------------------------------------------------------------
 
 \section*{Perturbation model-agnostic method}
@@ -275,6 +276,8 @@ output for an original instance against its predictions for perturbed samples. B
 how these modifications affect the classification, we can quantify the importance of each 
 feature without accessing the model's internal architecture.
 
+% \vspace{-0.5cm}
+
 \subsection*{LIME}
 
 LIME (Local Interpretable Model-Agnostic Explainer) generates local surrogates to approximate a 
@@ -282,15 +285,14 @@ black-box model $f$ \cite{ribeiro_why_2016}.
 
 \textbf{Key Principle}: It minimizes a loss function $\mathcal{L}(f,g,\pi_x)$ to ensure local fidelity
 while keeping the explanation model $g$ simple enough ($\Omega(g)$) for humans.
+A most global explanation of the black-box model can be provided by SP-LIME which 
+select a set of local and non-redundant LIME explanations. 
 
 \textbf{Limitation}: The explanation depends heavily on the kernel width $\pi_x$ and sampling, leading 
 to potential instability. 
 
-A most global explanation of the black-box model can be provided by SP-LIME which 
-select a set of local and non-redundant LIME explanations. 
-
 \begin{center}
-    \includegraphics[width=0.6\linewidth]{LIME_schema.png}
+    \includegraphics[width=0.5\linewidth]{LIME_schema.png}
     \captionof{figure}{LIME linear local approximation. 
         Black-box model $f$ classes is represented in blue/gray. The red 
         cross represents an explained instance and the others 
@@ -299,6 +301,8 @@ select a set of local and non-redundant LIME explanations.
     \label{fig:LIME_graph}
 \end{center}
 
+% \vspace{-0.5cm}
+
 \subsection*{Anchors}
 
 Anchors were developed to solve the lack of clear boundaries provided by LIME. 
@@ -306,11 +310,9 @@ To perform that, Anchors generates IF-THEN rules which 'anchor' a prediction.
 This set of short and disjoint rules are more comprehensible and then preferred by 
 the users \cite{ribeiro_anchors_2018}.
 
-\textbf{Formal Definition}: A rule $A$ is an Anchor for $x$ if $A(x)=1$ and it maintains high precision $\tau$ among its neighbors:
-\begin{equation}
-    \mathbb{E}_{\mathcal{D}(z \mid A)}[1_{f(x)=f(z)}] \geqslant \tau
-\end{equation}
-with $ \mathcal{D}(x \mid A)$ the distribution of neighbors of $x$ wich satisfy the Anchor $A$. 
+\textbf{Formal Definition}: A rule $A$ is an Anchor for $x$ if $A(x)=1$ and it maintains high precision $\tau$ among its neighbors 
+    $ \mathbb{E}_{\mathcal{D}(z \mid A)}[1_{f(x)=f(z)}] \geqslant \tau $, 
+with $ \mathcal{D}(x \mid A)$ the distribution of neighbors of $x$ which satisfy the Anchor $A$. 
 
 Computing Anchors is a combinatorial optimization problem. To handle the exponential search space, a 
 \textbf{Bottom-Up approach} is used:
