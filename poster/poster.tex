@@ -148,27 +148,11 @@ There is multiple methods to Find AXp, we will describe three of them here that 
 
 \subsection*{CPI-Xp (Coverage-based Explanations)}
 
-<<<<<<< HEAD
 Standard AXp's assume \textbf{feature independence}. When dependencies exist between features (e.g.\ a pregnant person is necessarily a woman), AXp's produce \textbf{superfluous or redundant} explanations \cite{cooper_abductive_2024}. CPI-Xp solves this by incorporating \textbf{feature constraints} and selecting explanations with \textbf{maximal coverage}.
 
 \vspace{0.3em}
 \textbf{Definition.} Let $F[\mathcal{C}]$ be the set of feasible instances under constraints $\mathcal{C}$, and $cov(E) = \{x \in F[\mathcal{C}] \mid E(x)\}$ the coverage of a partial assignment $E$.
 A \textbf{CPI-Xp} of $\kappa(x)$ is a partial assignment $E$ such that:
-=======
-Standard abductive explanations (AXp) implicitly assume \textbf{feature independence}. When dependencies exist 
-(e.g.\ a pregnant person is necessarily a woman), AXp's can produce superfluous or redundant explanations, 
-and their number can grow exponentially \cite{cooper_abductive_2024}.
-
-Cooper and Amgoud \cite{cooper_abductive_2024} address this by introducing \textbf{coverage-based explanations} (CPI-Xp). 
-The key notion is the \textbf{coverage} of a partial assignment $E$:
-    \begin{equation}
-        cov(E) = \{x \in F[\mathcal{C}] \mid E(x)\}
-    \end{equation}
-where $F[\mathcal{C}]$ is the set of instances satisfying constraints $\mathcal{C}$. An explanation 
-$E'$ \textbf{subsumes} $E$ if $cov(E) \subseteq cov(E')$.
-
-\textbf{Definition (CPI-Xp).} A coverage-based PI-explanation of $\kappa(x)$ is a partial assignment $E$ such that:
->>>>>>> 22483c4ff111facafe2722c6e59da9a2289f332d
 \begin{enumerate}
     \item $E(x)$
     \item $\forall y \in F[\mathcal{C}],\; E(y) \Rightarrow \kappa(y) = \kappa(x)$
@@ -180,88 +164,55 @@ The preferred variant \textbf{pCPI-Xp} keeps one representative per coverage cla
 \vspace{0.5em}
 \textbf{Key characteristics:}
 \begin{itemize}
-<<<<<<< HEAD
     \item \textbf{Complexity:} $\Pi_2^P$-complete (exact), but a \textbf{polynomial approximation} exists via dataset-based versions (d-CPI-Xp) in $O(m^2 n^2)$.
     
 \end{itemize}
 
-\subsection*{Efficient and Rigorous Model-Agnostic Explanations (sbAXp)}
-=======
-    \item \textbf{mCPI-Xp}: subset-minimal among CPI-Xp's.
-    \item \textbf{pCPI-Xp}: keeps only one representative among equivalent ones (same coverage). 
-    This is the only notion satisfying all seven desirable properties (success, non-triviality, irreducibility, 
-    coherence, consistency, independence, non-equivalence).
+\subsection*{CPI-Xp (Coverage-based Explanations)}
+
+Standard AXp's assume \textbf{feature independence}. When dependencies exist between features (e.g.\ a pregnant person is necessarily a woman), AXp's produce \textbf{superfluous or redundant} explanations \cite{cooper_abductive_2024}. CPI-Xp solves this by incorporating \textbf{feature constraints} and selecting explanations with \textbf{maximal coverage}.
+
+\vspace{0.3em}
+\textbf{Definition.} Let $F[\mathcal{C}]$ be the set of feasible instances under constraints $\mathcal{C}$, and $cov(E) = \{x \in F[\mathcal{C}] \mid E(x)\}$ the coverage of a partial assignment $E$.
+A \textbf{CPI-Xp} of $\kappa(x)$ is a partial assignment $E$ such that:
+\begin{enumerate}
+    \item $E(x)$
+    \item $\forall y \in F[\mathcal{C}],\; E(y) \Rightarrow \kappa(y) = \kappa(x)$
+    \item No valid explanation $E'$ strictly subsumes $E$ (i.e.\ $cov(E) \subsetneq cov(E')$)
+\end{enumerate}
+
+The preferred variant \textbf{pCPI-Xp} keeps one representative per coverage class and is the only notion satisfying all seven formal properties (success, non-triviality, irreducibility, coherence, consistency, independence, non-equivalence).
+
+\vspace{0.5em}
+\textbf{Key characteristics:}
+\begin{itemize}
+    \item \textbf{Complexity:} $\Pi_2^P$-complete (exact), but a \textbf{polynomial approximation} exists via dataset-based versions (d-CPI-Xp) in $O(m^2 n^2)$.
+    
 \end{itemize}
 
-\textbf{Complexity:} Computing CPI-Xp over the full feature space is $\Pi_2^P$-complete. To 
-achieve tractability, \textbf{dataset-based versions} (d-CPI-Xp) compute coverage over a sample 
-$T \subseteq F[\mathcal{C}]$, reducing complexity to $O(m^2 n^2)$, at the cost of explanations 
-only valid for instances in $T$.
->>>>>>> 22483c4ff111facafe2722c6e59da9a2289f332d
+\subsection*{Efficient and Rigorous Model-Agnostic Explanations}
 
-Classic logic-based XAI requires access to the model's internal structure and suffers from scalability issues. This method solves both by working \textbf{sample-based}: it only queries the model as a black-box on a finite sample $S \subseteq F$, producing \textbf{sample-based abductive explanations} (sbAXp).
-
-<<<<<<< HEAD
-\vspace{0.3em}
-\textbf{Principle.} The method exploits the \textbf{duality between AXp and CXp}: an AXp answers ``Why this prediction?'' while a Contrastive Explanation (CXp) answers ``Why not another?''. A CXp is a minimal subset of features that, if changed, suffices to alter the prediction. From all sbCXp's, the sbAXp's can be recovered via \textbf{minimal hitting sets}, and vice-versa.
-=======
 Logic-based XAI addresses the lack of rigor of sub-symbolic methods but has two major drawbacks, the need to 
 access the structure of the model and the scalability problems. With efficient and rigorous model-agnostic 
 explanations both problems can be solved. To do that, this model will search  the sample based abductive explanation (sbAXp).
-To find the sbAXp, this model uses weak contrastive explanation (sbWCXp) : 
-\begin{equation}
-    \mathbb{S} \subseteq \mathbb{F},\space \exists(x \in \mathbb{S}) . \left( \bigwedge_{i \in \mathcal{F} \setminus \mathcal{X}} (x_i = v_i) \right) \wedge (\kappa(x) \neq \kappa(v))
-\end{equation}
-which is a subset of features that suffice to change the prediction if their value is changed.
+To find the sbAXp, this model uses weak contrastive explanation (sbWCXp), which is a subset of features that suffice to change the prediction if their value is changed.
 
-A Contrastive Explanation (CXp) is a subset-minimal WCXp,whereas an AXp answers a “Why?” question, a contrastive 
-explanation answers a “Why not?” question. This XAI uses the duality of AXp and CXp explanations, meaning, from 
+A Contrastive Explanation (CXp) is a subset-minimal WCXp,whereas an AXp answers a "Why?" question, a contrastive 
+explanation answers a "Why not?" question. This XAI uses the duality of AXp and CXp explanations, meaning, from 
 sbCXp we can get the sbAXp.\\\\
 The algorithm to get from the subset of all sbWCXp from one sbAXp is quite simple: compare each sbWCXp against 
 all others and keep the ones with no subsets to get all sbCXps. Finding one sbAXp can be done in polynomial time but 
 finding one smallest sbAXp is much harder and unlikely to be solved in polynomial time, but can be done with a MaxSAT solver.
->>>>>>> 22483c4ff111facafe2722c6e59da9a2289f332d
 
-\vspace{0.3em}
-\textbf{Definition.} A \textbf{sbAXp} is a subset $X \subseteq F$ such that:
-$$\forall x \in S,\; \Bigl(\bigwedge_{i \in X} (x_i = v_i)\Bigr) \Rightarrow \kappa(x) = \kappa(v)$$
-A \textbf{sbCXp} is a minimal subset $X$ such that $\exists x \in S$ agreeing with $v$ on $F \setminus X$ but $\kappa(x) \neq \kappa(v)$.
+\subsection*{Leveraging Argumentation for Generating Robust Sample-based Explanations}
 
-\vspace{0.5em}
-\textbf{Key characteristics:}
-\begin{itemize}
-    \item \textbf{Complexity:} \textbf{Polynomial} $O(mn)$ to find one sbAXp --- the most efficient among logic-based methods.
-    \item \textbf{Smallest sbAXp:} Finding the \textit{smallest} sbAXp is intractable in general, but solvable via a \textbf{MaxSAT} encoding in comparable time.
-    \item \textbf{vs.\ CPI-Xp:} Much cheaper ($O(mn)$ vs.\ $\Pi_2^P$-complete), but lacks the 7 formal properties and does not handle feature dependencies.
-    \item \textbf{vs.\ Argument-based:} Simpler algorithm (no argumentation framework needed), but does not filter contradictory explanations.
-\end{itemize}
+This sample-based XAI uses arguments, which is a plausible sbAXp. To get the final sbAXps, this XAI uses attacks : if two arguments contradict each other, then both will be compared and only one(if any) will be kept, this is repeated until there is no contradiction.
 
-\subsection*{Argumentation-based Explanations}
+Each argument is composed of two parts, first the support, which the condition of the argument, when does it apply, second is the conclusion, what class does the argument predict.
+A contradiction is when the union of each support is not null and the conclusion different. All attacks are treated at the same time and depending on the selection function will give a set of stable extensions. A stable extension is a set of arguments without contradiction. The choosing of one of the stable extensions is done with an inference rule.\\
 
-This method uses an \textbf{argumentation framework} to generate and refine sbAXp's. Instead of computing explanations directly, it builds \textbf{arguments} (plausible sbAXp's) and eliminates contradictions through \textbf{attacks}, producing more robust explanations.
+With this XAI both success and coherence is not guaranteed. Coherence is only guaranteed with the universal inference rule, thus prioritize universal inference, keeping arguments that are in all selected stable extensions
 
-\vspace{0.3em}
-\textbf{Principle.} Each argument has a \textbf{support} (a set of feature conditions) and a \textbf{conclusion} (a predicted class). Two arguments \textbf{attack} each other when their supports are compatible but their conclusions differ. All attacks are resolved simultaneously via \textbf{stable extensions} (maximal conflict-free sets). A selection function (e.g.\ Max, Card, $Incl_i$, $Incl_c$) filters the extensions, and an \textbf{inference rule} selects the final explanations:
-\begin{itemize}
-    \item \textbf{Universal inference:} keeps only arguments present in \textit{all} selected extensions --- guarantees coherence.
-    \item \textbf{Existential inference:} keeps arguments present in \textit{any} selected extension --- more explanations but may break coherence.
-\end{itemize}
-
-\vspace{0.5em}
-\textbf{Key characteristics:}
-\begin{itemize}
-    \item \textbf{Complexity:} \textbf{Polynomial} --- comparable to sbAXp.
-    \item \textbf{Reliability:} ++ --- highest among logic-based methods, thanks to contradiction elimination.
-    \item \textbf{vs.\ sbAXp:} Same complexity but \textbf{filters out contradictory explanations}, producing more robust results.
-    \item \textbf{vs.\ CPI-Xp:} Much cheaper and more robust (++), but does not provide the full 7 formal properties and does not handle feature constraints.
-    \item \textbf{Trade-off:} Coherence is \textbf{only guaranteed with universal inference}; existential inference may produce contradictions.
-\end{itemize}
-
-<<<<<<< HEAD
-=======
-With this method both success, finding an sbAXp and cohérence, having an sbAXp with no contradiction is not guaranteed. Coherence is guaranteed with the universal inference rule while Coherence is often broken with the existential inference rule, thus prioritize universal inference. \\
-
->>>>>>> 22483c4ff111facafe2722c6e59da9a2289f332d
 %----------------------------------------------------------------------------------------
 %	SHAP (Colonne 3)
 %----------------------------------------------------------------------------------------
@@ -279,15 +230,6 @@ This family of XAI methods are based on the Shapley values concept from game the
 that give an \textbf{importance score} to each feature in the prediction of a single instance. Shapley values 
 provide a mathematically fair and unique method to attribute the payoff of a cooperative game to the 
 players. \\
-<<<<<<< HEAD
-=======
-% Formally, we define the coalitional game $(\mF, v)$ composed of the set of the $n$ numbered 
-% features used in the prediction $\mF = \{1, \dots, n\}$ and the evaluation function 
-% $v(\mS) = \mbE[f(X) | X_{\mS} = x_{\mS}]$ for all sub-coalition $\mS \subset \mF$, where $f$ is 
-% the classification function representing our model and $x_\mS = y_\mS$ means that instances $x$ and 
-% $y$ share the same values for the features in $\mS$. The Shapley value for a feature $i \in \mF$ is 
-% defined as follows:
->>>>>>> 22483c4ff111facafe2722c6e59da9a2289f332d
 
 Let $\mF = \{1, \dots, n\}$ be the set of the numbered features (the players). The Shapley value of a feature $i$ is computed by going through all the coalitions 
 not containing $i$ and looking at the \textbf{payoff difference} with and without the feature $i$ involved \cite{merrick_explanation_2020} :
@@ -326,7 +268,7 @@ $\mF$: $\mS_j = Pre_i(O_j)$ ;
 
 
 %----------------------------------------------------------------------------------------
-%	PERTURBATION METHODS
+%	PERTURBATION METHODS (Colonne 4)
 %----------------------------------------------------------------------------------------
 
 \section*{Perturbation model-agnostic method}
@@ -336,8 +278,6 @@ black-box model's decision process. These model-agnostic techniques compare the 
 output for an original instance against its predictions for perturbed samples. By observing 
 how these modifications affect the classification, we can quantify the importance of each 
 feature without accessing the model's internal architecture.
-
-% \vspace{-0.5cm}
 
 \subsection*{LIME}
 
@@ -362,8 +302,6 @@ to potential instability.
     \label{fig:LIME_graph}
 \end{center}
 
-% \vspace{-0.5cm}
-
 \subsection*{Anchors}
 
 Anchors were developed to solve the lack of clear boundaries provided by LIME. 
@@ -386,26 +324,6 @@ Computing Anchors is a combinatorial optimization problem. To handle the exponen
 \end{itemize}
 
 %----------------------------------------------------------------------------------------
-<<<<<<< HEAD
-=======
-%	CONCLUSIONS
-%----------------------------------------------------------------------------------------
-
-% \color{SaddleBrown} % SaddleBrown color for the conclusions to make them stand out
-
-% \section*{Conclusions}
-
-% \begin{itemize}
-% \item Pellentesque eget orci eros. Fusce ultricies, tellus et pellentesque fringilla, ante massa luctus libero, quis tristique purus urna nec nibh. Phasellus fermentum rutrum elementum. Nam quis justo lectus.
-% \item Vestibulum sem ante, hendrerit a gravida ac, blandit quis magna.
-% \item Donec sem metus, facilisis at condimentum eget, vehicula ut massa. Morbi consequat, diam sed convallis tincidunt, arcu nunc.
-% \item Nunc at convallis urna. isus ante. Pellentesque condimentum dui. Etiam sagittis purus non tellus tempor volutpat. Donec et dui non massa tristique adipiscing.
-% \end{itemize}
-
-% \color{DarkSlateGray} % Set the color back to DarkSlateGray for the rest of the content
-
- %----------------------------------------------------------------------------------------
->>>>>>> 22483c4ff111facafe2722c6e59da9a2289f332d
 %	REFERENCES
 %----------------------------------------------------------------------------------------
 
