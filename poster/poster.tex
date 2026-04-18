@@ -45,7 +45,7 @@
     url=false,        % Supprime les liens URL
     eprint=false      % Supprime les liens Arxiv
     ]{biblatex}       % Use biblatex 
-\addbibresource{sample.bib}
+\addbibresource{references.bib}
 
 % Use only necessary fields
 \AtEveryBibitem{
@@ -53,7 +53,19 @@
     \clearfield{note}
     \clearfield{pages}
     \clearfield{series}
+    \clearfield{title}
+    \clearfield{subtitle}
+    \clearfield{booktitle}
 }
+
+% Redéfinir l'environnement pour un affichage "en ligne"
+\defbibenvironment{bibliography}
+  {\noindent\ignorespaces} % Enlève l'indentation au début
+  {\unspace}               % Nettoie les espaces à la fin
+  {\textbf{[\printfield{labelnumber}]}~} % Affiche [1] suivi d'une espace insécable
+
+% Ajuster la ponctuation entre les entrées
+\renewcommand*{\finentrypunct}{\addperiod\quad}
 
 \begin{document}
 
@@ -208,7 +220,7 @@ With this method both success, finding an sbAXp and cohérence, having an sbAXp 
 %	SHAP (Colonne 3)
 %----------------------------------------------------------------------------------------
 
-\section*{Shapley values based XAI}
+\section{Shapley values based XAI}
 
 \newcommand{\mS}{\mathcal{S}}
 \newcommand{\mF}{\mathcal{F}}
@@ -217,33 +229,32 @@ With this method both success, finding an sbAXp and cohérence, having an sbAXp 
 \newcommand{\mbF}{\mathbb{F}}
 \newcommand{\mbE}{\mathbb{E}}
 
-In this section, we present local explanation methods based on the Shapley values concept from game theory 
-that give an importance score to each feature in the prediction of a single instance. Shapley values 
+This family of XAI methods are based on the Shapley values concept from game theory 
+that give an \textbf{importance score} to each feature in the prediction of a single instance. Shapley values 
 provide a mathematically fair and unique method to attribute the payoff of a cooperative game to the 
-players. Formally, we define the coalitional game $(\mF, v)$ composed of the set of the $n$ numbered 
-features used in the prediction $\mF = \{1, \dots, n\}$ and the evaluation function 
-$v(\mS) = \mbE[f(X) | X_{\mS} = x_{\mS}]$ for all sub-coalition $\mS \subset \mF$, where $f$ is 
-the classification function representing our model and $x_\mS = y_\mS$ means that instances $x$ and 
-$y$ share the same values for the features in $\mS$. The Shapley value for a feature $i \in \mF$ is 
-defined as follows:
+players. \\
+% Formally, we define the coalitional game $(\mF, v)$ composed of the set of the $n$ numbered 
+% features used in the prediction $\mF = \{1, \dots, n\}$ and the evaluation function 
+% $v(\mS) = \mbE[f(X) | X_{\mS} = x_{\mS}]$ for all sub-coalition $\mS \subset \mF$, where $f$ is 
+% the classification function representing our model and $x_\mS = y_\mS$ means that instances $x$ and 
+% $y$ share the same values for the features in $\mS$. The Shapley value for a feature $i \in \mF$ is 
+% defined as follows:
+
+Let $\mF = \{1, \dots, n\}$ be the set of the numbered features (the players). The Shapley value of a feature $i$ is computed by going through all the coalitions 
+not containing $i$ and looking at the \textbf{payoff difference} with and without the feature $i$ involved \cite{merrick_explanation_2020} :
 
 \begin{align}
     \phi_i = \frac{1}{n} \sum_{\mS \in \mF\backslash\{i\}} \binom{n-1}{|\mS|}^{-1} & \bigl( \mbE[f(X) | X_{\mS\backslash\{i\}} = x_{\mS\backslash\{i\}}] \\
     & - \mbE[f(X) | X_{\mS}= x_{\mS}] \bigr)
 \end{align}
 
-We see that the Shapley value of a feature $i$ is computed by going through all the coalitions 
-not containing $i$ and looking at the payoff difference with and without the feature $i$ involved.
-
-From the efficiency axiom of the Shapley values, we get the following property:
+From the efficiency axiom of Shapley values \cite{fryer_shapley_2021}, we get the following property that states that the sum of the importance is equal to the actual predicted value minus a reference contribution 
+that is the mean of all the predictions for the distribution on the input $X$
 
 \begin{align}
     \sum_{i \in \mF} \phi_i(v) &= \mbE[f(X) | X_{\mF} = x_{\mF}] - \mbE[f(X) | X_{\emptyset} = x_{\emptyset}] \\
     &= f(x) - \mbE[f(X)]
 \end{align}
-
-Therefore, the sum of the importance is equal to the actual predicted value minus a reference contribution 
-that is the mean of all the predictions for the distribution on the input $X$.
 
 Figure \ref{fig:shap-titanic} vizualises computed importance scores for the prediction of a naive Bayes 
 classifier on an instance of the Titanic dataset.
@@ -251,17 +262,18 @@ classifier on an instance of the Titanic dataset.
 \begin{center}
     \includegraphics[width=0.8\linewidth]{shap_titanic.png}
     \captionof{figure}{Feature importance attributions computed with Shapley values for the decision of a naive Bayes 
-    model on an instance of the Titanic dataset}
+    model on an instance of the Titanic dataset. From \cite{strumbelj_efficient_2010}}
     \label{fig:shap-titanic}
 \end{center}
 
 \subsection*{Approximation}
 
-The computation of exact Shapley values is intractable as it requires to explore all the sub-coalitions which 
-are in exponential number. Moreover, the computation of the evaluation function requires to explore all 
-the input space. Previous work have come up with sampling methods to get an approximation in polynomial 
-time. Sub-coalitions are sampled by taking all the features preceiding $i$ in random orderings $O_j$ of 
-$\mF$: $\mS_j = Pre_i(O_j)$. The reference instances $X$ are sampled following the distribution of input instances.
+\textcite{strumbelj_efficient_2010} have shown that computing exact Shapley values become intractable when the number of features is large ($n \geq 100$). \textcite{merrick_explanation_2020} have come up with sampling methods to get an approximation in polynomial time:
+\begin{itemize}
+    \item sub-coalitions are sampled by taking all the features preceiding $i$ in random orderings $O_j$ of 
+$\mF$: $\mS_j = Pre_i(O_j)$ ;
+    \item the reference instances $X$ are sampled following the distribution of input instances.
+\end{itemize}  
 
 
 %----------------------------------------------------------------------------------------
@@ -328,18 +340,18 @@ Computing Anchors is a combinatorial optimization problem. To handle the exponen
 %	CONCLUSIONS
 %----------------------------------------------------------------------------------------
 
-\color{SaddleBrown} % SaddleBrown color for the conclusions to make them stand out
+% \color{SaddleBrown} % SaddleBrown color for the conclusions to make them stand out
 
-\section*{Conclusions}
+% \section*{Conclusions}
 
-\begin{itemize}
-\item Pellentesque eget orci eros. Fusce ultricies, tellus et pellentesque fringilla, ante massa luctus libero, quis tristique purus urna nec nibh. Phasellus fermentum rutrum elementum. Nam quis justo lectus.
-\item Vestibulum sem ante, hendrerit a gravida ac, blandit quis magna.
-\item Donec sem metus, facilisis at condimentum eget, vehicula ut massa. Morbi consequat, diam sed convallis tincidunt, arcu nunc.
-\item Nunc at convallis urna. isus ante. Pellentesque condimentum dui. Etiam sagittis purus non tellus tempor volutpat. Donec et dui non massa tristique adipiscing.
-\end{itemize}
+% \begin{itemize}
+% \item Pellentesque eget orci eros. Fusce ultricies, tellus et pellentesque fringilla, ante massa luctus libero, quis tristique purus urna nec nibh. Phasellus fermentum rutrum elementum. Nam quis justo lectus.
+% \item Vestibulum sem ante, hendrerit a gravida ac, blandit quis magna.
+% \item Donec sem metus, facilisis at condimentum eget, vehicula ut massa. Morbi consequat, diam sed convallis tincidunt, arcu nunc.
+% \item Nunc at convallis urna. isus ante. Pellentesque condimentum dui. Etiam sagittis purus non tellus tempor volutpat. Donec et dui non massa tristique adipiscing.
+% \end{itemize}
 
-\color{DarkSlateGray} % Set the color back to DarkSlateGray for the rest of the content
+% \color{DarkSlateGray} % Set the color back to DarkSlateGray for the rest of the content
 
  %----------------------------------------------------------------------------------------
 %	REFERENCES
