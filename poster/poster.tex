@@ -260,7 +260,7 @@ Let $\mF = \{1, \dots, n\}$ be the set of the numbered features (the players). T
 not containing $i$ and looking at the \textbf{payoff difference} with and without the feature $i$ involved \cite{merrick_explanation_2020} :
 
 \begin{align*}
-    \phi_i = \frac{1}{n} \sum_{\mS \in \mF\backslash\{i\}} \binom{n-1}{|\mS|}^{-1} & \bigl( \mbE[f(X) | X_{\mS\backslash\{i\}} = x_{\mS\backslash\{i\}}] \\
+    \phi_i = \frac{1}{n} \sum_{\mS \in \mF\backslash\{i\}} \binom{n-1}{|\mS|}^{-1} & \bigl( \mbE[f(X) | X_{\mS\cup\{i\}} = x_{\mS\cup\{i\}}] \\
     & - \mbE[f(X) | X_{\mS}= x_{\mS}] \bigr)
 \end{align*}
 
